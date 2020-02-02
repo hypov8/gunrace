@@ -1,0 +1,9 @@
+# Visual Studio files
+*.ncb
+*.opt
+*.plg
+*.suo
+*.user
+
+# Build results
+Release/
