@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gamex86", "game.vcxproj", "{5CCD2D4E-440C-4040-B1F5-3992013E34A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		debug lan|Win32 = debug lan|Win32
+		debug Ser|Win32 = debug Ser|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.debug lan|Win32.ActiveCfg = debug lan|Win32
+		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.debug lan|Win32.Build.0 = debug lan|Win32
+		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.debug Ser|Win32.ActiveCfg = debug Ser|Win32
+		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.debug Ser|Win32.Build.0 = debug Ser|Win32
+		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.Release|Win32.ActiveCfg = Release|Win32
+		{5CCD2D4E-440C-4040-B1F5-3992013E34A1}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

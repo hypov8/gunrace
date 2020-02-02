@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug lan|Win32'">
+    <LocalDebuggerCommand>$(OutDir)..\kingpin.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments> +set port 31510 +set game gunrace +set deathmatch 1 +verbose 0 +logfile 0 +exec dm.cfg</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug Ser|Win32'">
+    <LocalDebuggerCommand>$(OutDir)..\kpded2_.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>+set port 31590 +set dedicated 1 +game gunrace +exec server.cfg +deathmatch 1 +set public 0 +map play</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerCommand>$(OutDir)..\kpded2.exe</LocalDebuggerCommand>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments> +set port 31510 +set dedicated 1 +game gunrace +exec server.cfg +deathmatch 1+map play</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+</Project>

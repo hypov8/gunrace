@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Config Files">
+      <UniqueIdentifier>{b7e15a2f-411e-4cc8-bb43-4f29d0dfc506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="acesrc">
+      <UniqueIdentifier>{b56ce843-12c3-4271-a2aa-607c637682f4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_ai.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_cast.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_chase.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_cmds.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_combat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_func.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_items.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_joe_misc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_misc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_phys.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_save.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_spawn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_svcmds.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_target.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_teamplay.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_trigger.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="g_weapon.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="m_bbox.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="m_move.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="p_client.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="p_hud.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="p_view.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="p_weapon.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="q_shared.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tourney.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unlagged.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vehicles.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="voice.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="voice_bitch.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="voice_punk.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gunrace.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="acesrc\acebot_ai.c">
+      <Filter>acesrc</Filter>
+    </ClCompile>
+    <ClCompile Include="acesrc\acebot_cmds.c">
+      <Filter>acesrc</Filter>
+    </ClCompile>
+    <ClCompile Include="acesrc\acebot_compress.c">
+      <Filter>acesrc</Filter>
+    </ClCompile>
+    <ClCompile Include="acesrc\acebot_items.c">
+      <Filter>acesrc</Filter>
+    </ClCompile>
+    <ClCompile Include="acesrc\acebot_movement.c">
+      <Filter>acesrc</Filter>
+    </ClCompile>
+    <ClCompile Include="acesrc\acebot_nodes.c">
+      <Filter>acesrc</Filter>
+    </ClCompile>
+    <ClCompile Include="acesrc\acebot_spawn.c">
+      <Filter>acesrc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="file.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="g_ai.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="g_func.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="g_local.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="g_nav.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="g_teamplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="m_player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="q_shared.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="veh_defs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vehicles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="voice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="voice_bitch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="voice_punk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gunrace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="acesrc\acebot.h">
+      <Filter>acesrc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="game.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mmod.txt" />
+  </ItemGroup>
+</Project>
