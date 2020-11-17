@@ -96,8 +96,8 @@ for(INDEX=1;INDEX<=(int)maxclients->value;INDEX++)\
 #define SPECTATING			1
 #define PLAYING				0
 
-#define GR_VER 12  //GUNRACE_ADD //used for client pack ver
-#define	GAMEVERSION	"GunRace v1.3" // Based on Monkey Mod v2.0" //GUNRACE_ADD
+#define GR_VER 14  //GUNRACE_ADD //used for client pack ver
+#define	GAMEVERSION	"GunRace v1.4" // Based on Monkey Mod v2.0" //GUNRACE_ADD
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -214,18 +214,22 @@ typedef enum
 	CLIP_PISTOL,
 	CLIP_SHOTGUN,
 	CLIP_TOMMYGUN,
-	CLIP_SLUGS, //308
+	CLIP_308, //308
 	CLIP_GRENADES,
-	CLIP_ROCKETS,
-	CLIP_FLAMEGUN
+	//CLIP_ROCKETS,
+	//CLIP_FLAMEGUN //GUNRACE_DISABLED
 	//GUNRACE_START
-	,CLIP_SSHOTGUN
+	 CLIP_SSHOTGUN		//order used for #w_.mdx
 	,CLIP_M41A
 	,CLIP_UZI
 	,CLIP_M60
-	,CLIP_SG3	//order used for w_.mdx
-	,CLIP_SG4	//order used for w_.mdx
-	,CLIP_MACHETE //note: hypov8. "COUNT" used in weapon_clip[MAX_WEAPONS]
+	,CLIP_BENELLI
+	,CLIP_SPAS12
+	,CLIP_MP5
+	,CLIP_AK47
+	,CLIP_MACHETE
+	//note: hypov8. "COUNT" used in weapon_clip[MAX_WEAPONS]
+	//note: hypov8. 15 entries(14) is MAX. replace pipe/GL if needed.
 	
 	//hypov8 todo add new weps
 	//GUNRACE_END
@@ -259,6 +263,16 @@ typedef enum
 #define	PART_GUN2				4
 #define	PART_CIGAR				5
 #define PART_HAT				6
+
+//GUNRACE_ADD
+#define	PART_GUN_BODY 0
+#define	PART_GUN_L_HAND 1 //use L both hands
+#define	PART_GUN_R_HAND 2
+#define	PART_GUN_FINGERS PART_GUN_R_HAND
+#define	PART_GUN_CLIP 3
+#define	PART_GUN_MISC 4 //rl shell
+
+//GUNRACE_END
 
 //monster attack state
 #define AS_STRAIGHT				1
@@ -726,8 +740,10 @@ extern	int	body_armor_index;
 #define MOD_M41A				50
 #define MOD_UZI					51
 #define MOD_M60					52
-#define MOD_SG3					53
-#define MOD_SG4					54
+#define MOD_BENELLI				53
+#define MOD_SPAS12				54
+#define MOD_MP5					55
+#define MOD_AK47				56
 //hypov8 todo add new weps
 //GUNRACE_END
 
@@ -1302,7 +1318,7 @@ typedef struct {
 
 //#define MAX_WEAPONS	10
 //GUNRACE_START
-#define MAX_WEAPONS	14 //clip_t CLIP_MACHETE 
+#define MAX_WEAPONS	16 //clip_t CLIP_MACHETE 
 //hypov8 todo add new weps
 //GUNRACE_END
 
@@ -1379,6 +1395,10 @@ typedef struct
 	int			noantilag;
 
 	int			anonwarn;
+
+	// ACEBOT_ADD
+	qboolean is_bot; //hypov8 used to free bots on level change. fix CNCT issue
+	// ACEBOT_END
 } client_persistant_t;
 
 // client data that stays across deathmatch respawns
@@ -1987,7 +2007,11 @@ extern int disable_anon_text;
 extern int disable_curse;
 extern int unlimited_curse;
 extern int enable_killerhealth;
-extern int enable_bots; // ACEBOT_ADD
+ // ACEBOT_ADD
+extern int enable_bots;
+extern int enable_addbot;		//elect admin command
+extern int enable_removebot;	//elect admin command
+ // ACEBOT_END
 
 typedef struct   // Message of the Day
 {

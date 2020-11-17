@@ -137,18 +137,23 @@ void ACECM_BotDebug(qboolean changeState)
 		safe_bprintf(PRINT_MEDIUM, "ACE: Debug Mode Off\n");
 	}
 }
+/*
+////////////
+ACESP_SpawnBot 
 
-// add hypov8. allow team
-//ACESP_SpawnBot (NULL, gi.argv(2), gi.argv(3), NULL);	
-void ACECM_BotAdd(char *cmd2, char *cmd3, char *cmd4)
+name		skin		team
+gi.argv(2)	gi.argv(3)	gi.argv(4)	
+//////////
+*/
+void ACECM_BotAdd(char *name, char *skin, char *team)
 {
 	if (!enable_bots) //disabled in comp.ini
 		return;
 
 	/*if (teamplay->value) // name, skin, team 
-		ACESP_SpawnBot(cmd4, cmd2, cmd3, NULL); //sv addbot thugBot "male_thug/009 031 031" dragon
+		ACESP_SpawnBot(name, skin, team, NULL); //sv addbot thugBot "male_thug/009 031 031" dragon
 	else*/ // name, skin			
-		ACESP_SpawnBot("\0", cmd2, cmd3, NULL); //sv addbot thugBot "male_thug/009 031 031"
+		ACESP_SpawnBot(name, skin, "\0", NULL); //sv addbot thugBot "male_thug/009 031 031"
 }
 
 

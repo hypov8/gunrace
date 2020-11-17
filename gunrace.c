@@ -3,7 +3,7 @@
 #include "gunrace.h"
 
 static grWeps_t grWepsOrig[GR_WEPS + 1] =
-{
+{	
 	{	// wep 1
 		"Pistol",	/* grName */		//.grName wep name. 'pickup name' from itemlist
 		"Pistl",	/* grNameMenu*/		//scoreboard name. 5 max length
@@ -11,77 +11,89 @@ static grWeps_t grWepsOrig[GR_WEPS + 1] =
 		"Bullets",	/* grAmmoName */	//ammo name used with wep
 		50			/* grAmmo */		//fill clip
 	},
-	{ 	// wep 2
+	{// wep 2
 		"Shotgun",
 		"Shot",
 		"Shotgun",
 		"Shells",
-		50
+		50		
 	},
 	{	// wep 3
 		"Tommygun",
 		"Tommy",
 		"Tommygun",
 		"Bullets",
-		150
+		150	
 	},
-	{ 	// wep 2 //TODO
-		"SG3",
-		"SG3",
-		"Shotgun3",
-		"Shells",
-		50
-	},
-
 	{ 	// wep 4
 		"heavy machinegun",
 		"HMG",
 		"H.M.G",
 		"308cal",
-		90
+		90	
 	},
-	{ 	// wep 2 //TODO
-		"SG4",
-		"SG4",
-		"Shotgun4",
+	{ 	// wep 5 //TODO
+		"spas12",
+		"SPAS",
+		"Spas12",
 		"Shells",
-		50
+		50		
 	},
-
-	{	// wep 5
+	{ 	// wep 6 //TODO
+		"mp5",
+		"MP5",
+		"MP5",
+		"Bullets",
+		90	
+	},
+	{	// wep 7 //TODO
+	 	"ak47",
+		"AK47",
+		"AK-47",
+		"Bullets",
+		120		
+	},
+	{	// wep 8 //TODO
+	 	"benelli",
+		"benel",
+		"Benelli",
+		"Shells",
+		50	
+	},
+	{	// wep 9
 		"M41a",
 		"M41a",
 		"M41a",
 		"Bullets",
-		150
+		90		
 	},
-	{	// wep 6
+	{	// wep 10
 		"Uzi",
 		"Uzi",
 		"Uzi's",
 		"Bullets",
-		80
+		240		
 	},
-	{ 	// wep 7
+	{ 	// wep 11
 		"SuperShotgun",
 		"SShot",
 		"S.Shotgun",
 		"Shells",
-		50
+		50		
 	},
-	{	// wep 8
+	{	// wep 12
 		"M60",
 		"M60",
 		"M-60",
 		"308cal",
-		80
+		180		
 	},
-	{	// wep 9 //GR_WEPS = 9 //index 8
+	{	// wep 13 //GR_WEPS = 9 //index 8
 		"Machete",
 		"Macht",
 		"Machete",
 		NULL,
-		0
+		0	
 	},
 	{	// end of list. +1 for next wep name in HUD 
 		"-",
@@ -90,7 +102,6 @@ static grWeps_t grWepsOrig[GR_WEPS + 1] =
 		NULL,
 		0
 	}
-
 };
 //hypov8 todo add new weps
 
@@ -151,18 +162,22 @@ static void gr_BuildGunRotationString(void)
 			}
 		}//do next wep
 	}
-	else if (wepOrder == 4) //machine gun
+	else if (wepOrder == 4) //machine gun //hypov8 todo: MG reverse?
 	{
 		for (i = 0; i < gunCount; i++)
 		{
-			if (i == 0 || i == 4)
-				memcpy(&grWeps[i], &grWepsOrig[3-1], sizeof(grWeps_t)); //3=tommy
-			else if (i == 1 || i == 5)
-				memcpy(&grWeps[i], &grWepsOrig[5-1], sizeof(grWeps_t)); //5=m41a
-			else if (i == 2 || i == 6)
-				memcpy(&grWeps[i], &grWepsOrig[6-1], sizeof(grWeps_t)); //6=uzi
-			else if (i == 3 || i == 7)
-				memcpy(&grWeps[i], &grWepsOrig[8-1], sizeof(grWeps_t)); //8=m60
+			if (i == 0 || i == 6)
+				memcpy(&grWeps[i], &grWepsOrig[3-1], sizeof(grWeps_t)); // 3=tommy
+			else if (i == 1 || i == 7)
+				memcpy(&grWeps[i], &grWepsOrig[6-1], sizeof(grWeps_t)); // 6=mp5
+			else if (i == 2 || i == 8)
+				memcpy(&grWeps[i], &grWepsOrig[7-1], sizeof(grWeps_t)); // 7=ak47
+			else if (i == 3 || i == 9)
+				memcpy(&grWeps[i], &grWepsOrig[9-1], sizeof(grWeps_t)); // 9=m41a
+			else if (i == 4 || i == 10)
+				memcpy(&grWeps[i], &grWepsOrig[10-1], sizeof(grWeps_t)); // 10=uzi
+			else if (i == 5 || i == 11)
+				memcpy(&grWeps[i], &grWepsOrig[12-1], sizeof(grWeps_t)); // 12=m60
 				//hypov8 todo add new weps
 		}
 	}
@@ -170,14 +185,14 @@ static void gr_BuildGunRotationString(void)
 	{
 		for (i = 0; i < gunCount; i++)
 		{
-			if (i == 0 || i == 4)
-				memcpy(&grWeps[i], &grWepsOrig[2 - 1], sizeof(grWeps_t)); //2=shotty
-			else if (i == 1 || i == 5)
-				memcpy(&grWeps[i], &grWepsOrig[7 - 1], sizeof(grWeps_t)); //7=sshoty
-			else if (i == 2 || i == 6)
-				memcpy(&grWeps[i], &grWepsOrig[2 - 1], sizeof(grWeps_t)); //2=shotty
-			else if (i == 3 || i == 7)
-				memcpy(&grWeps[i], &grWepsOrig[7 - 1], sizeof(grWeps_t)); //7=sshoty
+			if (i == 0 || i == 4 || i== 8)
+				memcpy(&grWeps[i], &grWepsOrig[2 - 1], sizeof(grWeps_t)); // 2=shotty
+			else if (i == 1 || i == 5|| i == 9)
+				memcpy(&grWeps[i], &grWepsOrig[5 - 1], sizeof(grWeps_t)); // 5=spas
+			else if (i == 2 || i == 6|| i == 10)
+				memcpy(&grWeps[i], &grWepsOrig[8 - 1], sizeof(grWeps_t)); // 8=bennli
+			else if (i == 3 || i == 7|| i == 11)
+				memcpy(&grWeps[i], &grWepsOrig[11 - 1], sizeof(grWeps_t)); // 11=sshoty
 
 			//hypov8 todo add new weps
 		}
@@ -188,25 +203,23 @@ static void gr_BuildGunRotationString(void)
 void SetupGunrace(void) //add hypov8
 {
 	int i,frags;
-	char *value = weaponfrags->string;
-	char *value2 = weaponorder->string;
+	char *fragCnt = weaponfrags->string;
+	char *wepOrder = weaponorder->string;
 
-#ifndef HYPODEBUG //allow skill 4
+
 	if (weaponorder->value < 1.0)
-		value2 = "1";
+		wepOrder = "1";
 	if (weaponorder->value > 5.0)
-		value2 = "5";
-#endif
-	weaponorder = gi.cvar_forceset("weaponorder", value2);//add goat random
+		wepOrder = "5";
+	weaponorder = gi.cvar_forceset("weaponorder", wepOrder);//add goat random
 
 	gr_BuildGunRotationString();
 
 	if (weaponfrags->value > 5.0)
-		value = "5";
+		fragCnt = "5";
 	if (weaponfrags->value < 1.0)
-		value = "1";
-
-	weaponfrags = gi.cvar_forceset("weaponfrags", value);
+		fragCnt = "1";
+	weaponfrags = gi.cvar_forceset("weaponfrags", fragCnt);
 
 	frags = (int)weaponfrags->value;
 	killcount[0] = frags;
@@ -303,7 +316,13 @@ static void gr_ChangeClientWeapon(edict_t *ent, int Oldweapon)
 	client->pers.selected_item = ITEM_INDEX(item);
 	client->pers.inventory[client->pers.selected_item] = 1;
 	
+	//set new weapon
 	client->newweapon = &itemlist[ITEM_INDEX(item)]; //hypov8 add
+
+	// show icon and name on status bar
+	client->ps.stats[STAT_PICKUP_ICON] = gi.imageindex(item->icon);
+	client->ps.stats[STAT_PICKUP_STRING] = CS_ITEMS+ITEM_INDEX(item);
+	client->pickup_msg_time = level.time + 5.5;
 
 	//	dont use ammo on Machete
 	if (client->resp.curwepIndex == GR_WEPS - 1)
@@ -365,13 +384,7 @@ void gr_CheckWepState(void)//add hypov8
 		//cant change wep anymore
 		if (ent->client->resp.curwepIndex == GR_WEPS - 1)
 			continue;
-#if HYPODEBUG
-		//test knife
-		if (ent->client->resp.curwepIndex == 0){
-			ent->client->resp.score = killcount[4]; //2=sg3 7=m60
-			ent->client->resp.curwepIndex = 4;
-		}
-#endif
+
 		//hypo look through all score/kill counters
 		for (j = GR_WEPS-1 ; j >=0 ; j--) // count backward, what if we killed 2 ppl
 		{

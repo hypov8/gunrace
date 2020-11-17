@@ -235,10 +235,6 @@ void SpawnDamage (edict_t *self, int type, vec3_t origin, vec3_t normal, int dam
 	// JOSEPH 12-MAY-99-B
 	else
 	{
-#if HYPODEBUG
-	int		damage = 80;
-#endif
-
 		// As per Maxx request
 		if (damage > 1)
 			damage <<= 1;

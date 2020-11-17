@@ -739,34 +739,34 @@ typedef struct
 //
 // muzzle flashes / player effects
 //
-#define	MZ_BLASTER			0
-#define MZ_MACHINEGUN		1
-#define	MZ_SHOTGUN			2
+#define	MZ_BLASTER			0 //m60				//weapons/blastf1a.wav
+#define MZ_MACHINEGUN		1 //tomgun			//weapons/machinegun/machgf5b.wav 1-5
+#define	MZ_SHOTGUN			2 //shotgun			//weapons/shotgun/shotgf1b.wav
 #define	MZ_CHAINGUN1		3
-#define	MZ_CHAINGUN2		4
+#define	MZ_CHAINGUN2		4 //uzi				//2x tommy	
 #define	MZ_CHAINGUN3		5
-#define	MZ_RAILGUN			6
-#define	MZ_ROCKET			7
-#define	MZ_GRENADE			8
+#define	MZ_RAILGUN			6 //benelli			//weapons/railgf1a.wav
+#define	MZ_ROCKET			7 //ak47
+#define	MZ_GRENADE			8 //spas12			//weapons/grenade_launcher/gl_fire.wav
 #define	MZ_LOGIN			9
 #define	MZ_LOGOUT			10
 #define	MZ_RESPAWN			11
 #define	MZ_BFG				12
-#define	MZ_SSHOTGUN			13
-#define	MZ_HYPERBLASTER		14
+#define	MZ_SSHOTGUN			13 //super shotgun	//weapons/shotgun/sshotf1b.wav
+#define	MZ_HYPERBLASTER		14 //m41a			//sound/weapons/hyprbf1a.wav
 #define	MZ_ITEMRESPAWN		15
 // RAFAEL
 #define MZ_IONRIPPER		16
 #define MZ_BLUEHYPERBLASTER 17
 #define MZ_PHALANX			18
-#define	MZ_PISTOL			19
+#define	MZ_PISTOL			19 //mp5			//weapons/pistol/pistola3.wav 1-4
 
 
 #define MZ_BLACKJACK_SWING	20
 #define MZ_BLACKJACK_HIT	21
 
-#define MZ_SPISTOL			22
-#define MZ_PISTOL_DAMAGE_MOD 23
+#define MZ_SPISTOL			22 //weapons/pistol/silencer.wav Sound range shorter
+#define MZ_PISTOL_DAMAGE_MOD 23 //magnum
 
 // JOSEPH 19-JAN-99
 #define MZ_CROWBAR_SWING	24
@@ -774,7 +774,7 @@ typedef struct
 // END JOSEPH
 
 #define MZ_BARMACHINEGUN	26
-#define MZ_BARMACHINEGUN2	27
+#define MZ_BARMACHINEGUN2	27 //no effect
 
 #define MZ_SILENCED			128		// bit flag ORed with one of the above numbers
 

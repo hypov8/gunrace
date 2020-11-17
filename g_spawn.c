@@ -744,11 +744,15 @@ void ED_CallSpawn (edict_t *ent)
 	//GUNRACE_START
 	// Remove all weapons and ammo from the game.
 	if ((!strncmp(ent->classname, "weapon_", 7)) || (!strncmp(ent->classname, "ammo_", 5)))
-		if (ent->model){
+	{
+		if (ent->model)
 			ent->classname = "misc_model"; //add hypov8 fix for map q3dm1_hellgate etc..
-		}
 		else
+		{
+			G_FreeEdict(ent); //hypov8 add
 			return;
+		}
+	}
 
 	//hypov8 make all mods into 2x fire
 	if (!strcmp(ent->classname, "hmg_mod_colling")
@@ -1161,6 +1165,10 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	// create the node data structure
 	level.node_data = gi.TagMalloc (sizeof (active_node_data_t), TAG_GAME);
 // END:		Xatrix/Ridah/Navigator/19-mar-1998
+
+// ACEBOT_ADD
+	ACESP_FreeBots(); //add hypov8
+// ACEBOT_END
 
 	// set client fields on player ents
 	for (i=0 ; i<game.maxclients ; i++)
@@ -1885,17 +1893,21 @@ void SP_worldspawn (edict_t *ent)
 	gi.modelindex ("#w_pistol.mdx");			// CLIP_PISTOL
 	gi.modelindex ("#w_shotgun.mdx");			// CLIP_SHOTGUN
 	gi.modelindex ("#w_tommygun.mdx");			// CLIP_TOMMGUN
-	gi.modelindex ("#w_heavy machinegun.mdx");	// CLIP_SLUGS
+	gi.modelindex ("#w_heavy machinegun.mdx");	// CLIP_308
 	gi.modelindex ("#w_grenade launcher.mdx");	// CLIP_GRENADES
+#if 0 //GUNRACE_DISABLED
 	gi.modelindex ("#w_bazooka.mdx");			// CLIP_ROCKETS
 	gi.modelindex ("#w_flamethrower.mdx");		// CLIP_FLAMEGUN
+#endif
 	//GUNRACE_START
 	gi.modelindex ("#w_sshotgun.mdx");			// CLIP_SSHOTGUN
 	gi.modelindex ("#w_m41a.mdx");				// CLIP_M41A
 	gi.modelindex ("#w_uzi.mdx");				// CLIP_UZI
 	gi.modelindex ("#w_m60.mdx");				// CLIP_M60
-	gi.modelindex ("#w_shotg3.mdx");			// CLIP_SG3
-	gi.modelindex ("#w_shotg4.mdx");			// CLIP_SG4
+	gi.modelindex ("#w_benelli.mdx");			// CLIP_BENELLI
+	gi.modelindex ("#w_spas12.mdx");			// CLIP_SPAS12
+	gi.modelindex ("#w_mp5.mdx");				// CLIP_MP5
+	gi.modelindex ("#w_ak47.mdx");				// CLIP_AK47
 
 	gi.modelindex ("#w_machete.mdx");			// CLIP_MACHETE
 	//hypov8 todo add new weps

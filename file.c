@@ -69,8 +69,11 @@ int proccess_ini_file()
 	enable_killerhealth = false;
 	wait_for_players = false;
 	num_MOTD_lines = 0;
-	enable_bots = false;// ACEBOT_ADD
-
+// ACEBOT_ADD
+	enable_bots = false;
+	enable_addbot = false;		//elect admin command
+	enable_removebot = false;	//elect admin command
+// ACEBOT_END
 	
 	// Open config file
 	game_dir = gi.cvar("game", "", 0);
@@ -206,10 +209,15 @@ int proccess_ini_file()
 		else if (!strcmp(key, "disable_geoip"))
 			disable_geoip = true;
 #endif
-		// ACEBOT_ADD
+
+// ACEBOT_ADD
 		else if (!strcmp(key, "enable_bots"))
 			enable_bots = true;
-		// ACEBOT_END
+		else if (!strcmp(key, "enable_addbot"))
+			enable_addbot = true;
+		else if (!strcmp(key, "enable_removebot"))
+			enable_removebot = true;
+// ACEBOT_END
 		else
 			gi.dprintf("Unknown gunrace.ini line: %s\n",buffer); //GUNRACE_CHANGE
 	}

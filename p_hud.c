@@ -1263,12 +1263,14 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 
 	realtotal = total;
 
+	//heading mapname
 	Com_sprintf (entry, sizeof(entry), "xm %i yt 5 dmstr 990 \"Map: %s\" ", -5*strlen(level.mapname), level.mapname);
 	j = strlen(entry);
 	strcpy (string + stringlength, entry);
 	stringlength += j;
 
 	//GUNRACE_ADD
+	//heading weaponorder
 	Com_sprintf(entry2, sizeof(entry2), " xm %i yt 25 dmstr 990 \"%s\" ", -5 * strlen(level.mapname), weaponordertype);
 	j = strlen(entry2);
 	strcpy(string + stringlength, entry2);
@@ -1299,7 +1301,7 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 				"xr %i yv %i dmstr 663 \"NAME         ping time  hits\" ",
 				-36*10 - 10, -60+-21 );
 	}
-	else
+	else //SCOREBOARD2
 //GUNRACE_START
 #if 0
 //GUNRACE_END
@@ -1310,7 +1312,8 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 //GUNRACE_START
 #else
 		Com_sprintf (entry, sizeof(entry),
-			"xr %i yv %i dmstr 663 \"NAME        deaths  acc   wep\" ",
+		  //"xr %i yv %i dmstr 663 \"NAME        deaths  acc   wep\" ",
+			"xr %i yv %i dmstr 663 \"NAME       deaths k/d  acc   wep\" ",
 			-36*10 - 10, -60+-21 );
 #endif
 //GUNRACE_END
@@ -1371,10 +1374,23 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 				-60 + i * 17, tag, cl->pers.netname, cl->resp.deposited, cl->resp.accshot ? cl->resp.acchit * 1000 / cl->resp.accshot : 0, fn);
 //GUNRACE_START
 #else
-			Com_sprintf(entry, sizeof(entry),
+			/*Com_sprintf(entry, sizeof(entry),
 				"yv %i dmstr %s \"%-13s %4i %4i %5s\" ",
-				-60 + i * 17, tag, cl->pers.netname, cl->resp.deposited,
-				cl->resp.accshot ? cl->resp.acchit * 1000 / cl->resp.accshot : 0, grWeps[cl->resp.curwepIndex].grWepNameMenu); //hypov8 display current weapon	
+				-60 + i * 17, tag, 
+				cl->pers.netname,   //name
+				cl->resp.deposited, //deaths
+				cl->resp.accshot ? cl->resp.acchit * 1000 / cl->resp.accshot : 0, 
+				grWeps[cl->resp.curwepIndex].grWepNameMenu);*/ //hypov8 display current weapon	
+			Com_sprintf(entry, sizeof(entry),
+				"yv %i dmstr %s \"%-13s %3i %.3s %4i %5s\" ",
+				-60 + i * 17, 
+				tag, //color 
+				cl->pers.netname,  //name. max 13
+				(cl->resp.deposited >999 )? 999 : cl->resp.deposited, //deaths. max 999
+				va("%.1f", cl->resp.deposited? (float)cl->resp.score / (float)cl->resp.deposited: (float)cl->resp.score), //k/d
+				cl->resp.accshot ? cl->resp.acchit * 1000 / cl->resp.accshot : 0, //accuracy
+				grWeps[cl->resp.curwepIndex].grWepNameMenu); //hypov8 display current weapon	
+
 #endif
 //GUNRACE_END
 
@@ -1384,6 +1400,12 @@ void DeathmatchScoreboardMessage (edict_t *ent)
 			strcpy(string + stringlength, entry);
 			stringlength += j;
 		}
+#if HYPODEBUG
+		else
+		{
+			gi.dprintf("Scoreboard to long\n");//debug
+		}
+#endif
 	}
 
 	if (realtotal > i)

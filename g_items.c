@@ -1963,10 +1963,12 @@ model="models/weapons/g_shotgun/tris.md2"
 		Drop_Weapon,
 		Weapon_Shotgun,
 		"misc/w_pkup.wav",
-		"models/weapons/g_shotgun/tris.md2", EF_REFL,
+		"models/weapons/g_shotgun/tris.md2", 
+		EF_REFL,
 		"models/weapons/shotgun/shotgun.mdx",
-/* icon */		"/pics/h_shotgun.tga",
-/* pickup */	"Shotgun",
+		/* client side info */
+		"/pics/h_shotgun.tga",							/* icon */
+		"Shotgun",										/* pickup */
 		0,
 		1,
 		"Shells",
@@ -1987,9 +1989,8 @@ model="models/weapons/g_shotgun/tris.md2"
 		"models/weapons/v_machete/tris.md2",		/* world_model */
 		EF_REFL,									/* world_model_flags */
 		"models/weapons/v_machete/machete.mdx",		/* view_model */
-
 		/* client side info */
-		"/pics/h_cbar.tga",							/* icon */
+		"/pics/h_machete.tga",						/* icon */
 		"Machete",									/* pickup_name */
 		0,											/* count_width */
 		0,											/* quantity */
@@ -2002,20 +2003,22 @@ model="models/weapons/g_shotgun/tris.md2"
 
 	// G()^T Supershotgun
 	{
-		"weapon_supershotgun", 
-		Pickup_Weapon,
-		Use_Weapon,
-		Drop_Weapon,
-		Weapon_SuperShotgun,
-		"misc/w_pkup.wav",
-		"models/weapons/v_shotg2/v_shotg2.mdx", EF_REFL,
-		"models/weapons/v_shotg2/v_shotg2.mdx",
-/* icon */		"/pics/h_shotgun.tga",
-/* pickup */	"SuperShotgun",
-		2,
-		1,
-		"Shells",
-		IT_WEAPON|IT_STAY_COOP,
+		"weapon_supershotgun",  					/*classname*/
+		Pickup_Weapon,								/* pickup */
+		Use_Weapon,									/* use */
+		Drop_Weapon,								/* drop */
+		Weapon_SuperShotgun,							/* weaponthink */
+		"misc/w_pkup.wav",							/* pickup_sound */
+		"models/weapons/v_shotg2/v_shotg2.mdx", 	/* world_model */
+		EF_REFL,									/* world_model_flags */
+		"models/weapons/v_shotg2/v_shotg2.mdx",		/* view_model */
+		/* client side info */
+		"/pics/h_shotg2.tga",						/* icon */	
+		"SuperShotgun",								/* pickup_name */
+		2,											/* count_width */
+		1,											/* quantity */		
+		"Shells",									/* ammo */
+		IT_WEAPON|IT_STAY_COOP,						/* flags */
 		NULL,
 		0,
 /* precache */ "weapons/shotgun/shotgf1b.wav weapons/shotgun/shotgr1b.wav"
@@ -2029,12 +2032,13 @@ model="models/weapons/g_shotgun/tris.md2"
 		Drop_Weapon,
 		Weapon_M41a, //hypov8 todo
 		"misc/w_pkup.wav",
-		"models/weapons/g_tomgun/tris.md2",
+		"",
 		EF_REFL,
 		"models/weapons/v_m41a/m41a.mdx",
-		"/pics/h_tgun.tga",				/* icon */ //hypov8 todo
-		"M41a",							/* pickup */
-		0,
+		/* client side info */
+		"/pics/h_m41a.tga",					/* icon */
+		"M41a",										/*pickup_name*/
+		2,
 		1,
 		"Bullets",
 		IT_WEAPON | IT_STAY_COOP,
@@ -2051,11 +2055,11 @@ model="models/weapons/g_shotgun/tris.md2"
 		Drop_Weapon,						/* drop */
 		Weapon_Uzi,							/* weaponthink */
 		"misc/w_pkup.wav",					/* pickup_sound */
-		"models/weapons/v_uzi/uzi.mdx",		/* world_model */
+		"",									/* world_model */
 		EF_REFL,							/* world_model_flags */
 		"models/weapons/v_uzi/uzi.mdx",		/* view_model */
-
-		"/pics/h_shotgun.tga",				/* icon */		
+		/* client side info */
+		"/pics/h_uzi.tga",					/* icon */		
 		"Uzi",								/* pickup_name */
 		2,									/* count_width */
 		1,									/* quantity */
@@ -2074,11 +2078,11 @@ model="models/weapons/g_shotgun/tris.md2"
 		Drop_Weapon,							/* drop */
 		Weapon_M60,								/* weaponthink */
 		"misc/w_pkup.wav",						/* pickup_sound */
-		"models/weapons/g_hmg/tris.md2",		/* world_model */
+		"",										/* world_model */
 		EF_REFL,								/* world_model_flags */
-		"models/weapons/v_m60/m60.mdx",			/* view_model */
+		"models/weapons/v_m60/v_gun.mdx",		/* view_model */
 		/* client side info */
-		"/pics/h_hmg.tga", 						/* icon */ //todo G()^T
+		"/pics/h_m60.tga", 						/* icon */
 		"M60",									/* pickup_name */
 		2,										/* count_width */
 		1,										/* quantity */
@@ -2086,21 +2090,21 @@ model="models/weapons/g_shotgun/tris.md2"
 		IT_WEAPON | IT_STAY_COOP,				/* flags */
 		NULL,									/* info */
 		0,										/* tag */
-		"weapons/m60_cock.wav"				/* precache */
+		"weapons/m60/cock.wav"					/* precache */
 	},
 	{
-		"weapon_SG3", 							/*classname*/
+		"weapon_spas12", 						/*classname*/
 		Pickup_Weapon,							/* pickup */
 		Use_Weapon,								/* use */
 		Drop_Weapon,							/* drop */
-		Weapon_Shotgun,								/* weaponthink */
+		Weapon_Shotgun,							/* weaponthink */
 		"misc/w_pkup.wav",						/* pickup_sound */
-		"models/weapons/g_hmg/tris.md2",		/* world_model */
+		"",										/* world_model */
 		EF_REFL,								/* world_model_flags */
-		"models/weapons/v_shotg3/sg3.mdx",		/* view_model */
+		"models/weapons/v_spas12/v_gun.mdx",	/* view_model */
 		/* client side info */
-		"/pics/h_shotgun.tga", 					/* icon */ //todo G()^T
-		"SG3",									/* pickup_name */
+		"/pics/h_spas12.tga", 					/* icon */
+		"spas12",								/* pickup_name */
 		2,										/* count_width */
 		1,										/* quantity */
 		"Shells",								/* ammo */
@@ -2110,18 +2114,18 @@ model="models/weapons/g_shotgun/tris.md2"
 		""										/* precache */
 	},
 	{
-		"weapon_SG4", 							/*classname*/
+		"weapon_benelli", 						/*classname*/
 		Pickup_Weapon,							/* pickup */
 		Use_Weapon,								/* use */
 		Drop_Weapon,							/* drop */
-		Weapon_Shotgun,								/* weaponthink */
+		Weapon_Shotgun,							/* weaponthink */
 		"misc/w_pkup.wav",						/* pickup_sound */
-		"models/weapons/g_hmg/tris.md2",		/* world_model */
+		"",										/* world_model */
 		EF_REFL,								/* world_model_flags */
-		"models/weapons/v_shotg4/sg4.mdx",		/* view_model */
+		"models/weapons/v_benelli/v_gun.mdx",	/* view_model */
 		/* client side info */
-		"/pics/h_shotgun.tga", 					/* icon */ //todo G()^T
-		"SG4",									/* pickup_name */
+		"/pics/h_benelli.tga", 					/* icon */
+		"benelli",								/* pickup_name */
 		2,										/* count_width */
 		1,										/* quantity */
 		"Shells",								/* ammo */
@@ -2129,8 +2133,48 @@ model="models/weapons/g_shotgun/tris.md2"
 		NULL,									/* info */
 		0,										/* tag */
 		""										/* precache */
+	},	
+	{
+		"weapon_mp5",						/*classname*/	
+		Pickup_Weapon,						/* pickup */
+		Use_Weapon,							/* use */
+		Drop_Weapon,						/* drop */
+		Weapon_Tommygun,					/* weaponthink */
+		"misc/w_pkup.wav",					/* pickup_sound */
+		"",									/* world_model */
+		EF_REFL,							/* world_model_flags */
+		"models/weapons/v_mp5/v_gun.mdx",	/* view_model */
+		"/pics/h_mp5.tga",					/* hud icon */	
+		"mp5",								/* pickup_name */
+		2,									/* count_width */
+		1,									/* quantity */	
+		"Bullets",							/* ammo */	
+		IT_WEAPON|IT_STAY_COOP,				/* flags */	
+		NULL,								/* info */
+		0,									/* tag */
+		"weapons/mp5/cock.wav"				/* precache */
 	},
-	
+	{
+		"weapon_ak47",						/*classname*/	
+		Pickup_Weapon,						/* pickup */
+		Use_Weapon,							/* use */
+		Drop_Weapon,						/* drop */
+		Weapon_Tommygun,					/* weaponthink */
+		"misc/w_pkup.wav",					/* pickup_sound */
+		"",									/* world_model */
+		EF_REFL,							/* world_model_flags */
+		"models/weapons/v_ak47/v_gun.mdx",	/* view_model */
+		"/pics/h_ak47.tga",					/* hud icon */	
+		"ak47",								/* pickup_name */
+		2,									/* count_width */
+		1,									/* quantity */	
+		"Bullets",							/* ammo */	
+		IT_WEAPON|IT_STAY_COOP,				/* flags */	
+		NULL,								/* info */
+		0,									/* tag */
+		"weapons/ak47/cock.wav"				/* precache */
+	},
+
 	//hypov8 misc model. used in hellgate
 	{
 		"misc_model",	/*classname*/
@@ -2170,8 +2214,8 @@ model="models/weapons/g_tomgun/tris.md2"
 		"misc/w_pkup.wav",
 		"models/weapons/g_tomgun/tris.md2", EF_REFL,
 		"models/weapons/v_tomgun/tomgun.mdx",
-/* icon */		"/pics/h_tgun.tga",
-/* pickup */	"Tommygun",
+		"/pics/h_tgun.tga",								/* icon */	
+		"Tommygun",										/* pickup */
 		0,
 		1,
 		"Bullets",
@@ -3373,7 +3417,6 @@ void SP_pistol_mod_rof (edict_t *self)
 void SP_misc_model (edict_t *self)
 {
 	SpawnItem (self, FindItem ("misc_model"));
-
 }
 //GUNRACE_END
 

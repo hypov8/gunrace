@@ -324,15 +324,22 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				message = "was mowed down by";
 				message2 = "'s M60";
 				break;
-			case MOD_SG3:
+			case MOD_BENELLI:
 				message = "was filled with buckshot by";
 				message2 = "'s shotgun";
 				break;
-			case MOD_SG4:
+			case MOD_SPAS12:
 				message = "was sprayed with lead by";
 				message2 = "'s SPAS";
 				break;
-
+			case MOD_MP5:
+				message = "was downed by";
+				message2 = "'s MP5";
+				break;
+			case MOD_AK47:
+				message = "was downed by";
+				message2 = "'s MP5";
+				break;
 			//hypov8 todo add new weps
 //GUNRACE_END
 			}
@@ -1342,7 +1349,7 @@ void PutClientInServer (edict_t *ent, qboolean isBot, int team)
 			if (!isBot)
 				client->invincible_framenum = level.framenum + 15;  //1.5 seconds 
 			else
-				client->invincible_framenum = level.framenum + 10;  //1 second (1.5 for players) 
+				client->invincible_framenum = level.framenum + 10;  //1.0 second (1.5 for players) 
 // ACEBOT_END
 
 	}
@@ -2103,8 +2110,11 @@ void ClientUserinfoChanged (edict_t *ent, char *userinfo)
 	if (strncmp(s, "female_chick/", 13) 
 		&& strncmp(s, "male_thug/", 10) 
 		&& strncmp(s, "male_runt/", 10)
+		&& strncmp(s, "male_kiss/", 10) //hypov8 todo
 		&& strncmp(s, "male_homer/", 11)
 		&& strncmp(s, "male_alien/", 11)
+		&& strncmp(s, "male_bones/", 11) //hypov8 todo
+		&& strncmp(s, "male_droid2/", 12) //hypov8 todo
 		&& strncmp(s, "male_bender/", 12)
 		&& strncmp(s, "male_krafty/", 12)
 		&& strncmp(s, "male_drfreak/", 13)
@@ -2377,6 +2387,15 @@ qboolean ClientConnect (edict_t *ent, char *userinfo)
 
 	ent->client->pers.lastpacket = curtime;
 	level.lastactive = level.framenum;
+
+// ACEBOT_ADD
+	if (ent->acebot.is_bot)
+	{
+		ent->client->pers.is_bot = true;  //fix CNCT issue
+		ent->client->pers.spectator = PLAYING;
+		ent->client->showscores = NO_SCOREBOARD;
+	}
+// ACEBOT_END
 
 	return true;
 }

@@ -310,7 +310,7 @@ qboolean ACEND_FollowPath(edict_t *self)
 #if 1 //def HYPODEBUG //defined in project DEBUG
 	//////////////////////////////////////////
 	// Show the path (uncomment for debugging)
-	if (debug_mode && !debug_mode_origin_ents) //hypov8 disable path lines, tomany overflows
+	if (debug_mode && !debug_mode_origin_ents) //hypov8 disable path lines, to many overflows
 	{
 		show_path_from = self->acebot.current_node;
 		show_path_to = self->acebot.goal_node;
@@ -1205,7 +1205,7 @@ void ACEND_PathToTeleporter(edict_t *player)
 	short closest_node;
 	if (!enable_bots) //disabled in comp.ini
 		return;
-	if (player->acebot.is_bot) //add hypov8 only rout on 1st player
+	if (player->acebot.is_bot) //add hypov8 only route on 1st player
 		return;
 
 	if (sv_botpath->value && ACEND_PathMapIsFirstPlayer(player))

@@ -333,7 +333,7 @@ void InitGame (void)
 //GUNRACE_START
 	if (teamplay->value != 0)
 		teamplay = gi.cvar_set("teamplay", "0");
-	teamplay = gi.cvar("teamplay", "0", CVAR_NOSET); //fixed
+	teamplay = gi.cvar("teamplay", "0", CVAR_NOSET); //fixed DM
 	gi.dprintf("This mod only supports Free for all!\n");
 
 	weaponfrags = gi.cvar("weaponfrags", "3", CVAR_LATCH); //add hypov8
@@ -343,7 +343,8 @@ void InitGame (void)
 
 	g_cashspawndelay = gi.cvar("g_cashspawndelay", "5", CVAR_ARCHIVE|CVAR_LATCH);
 
-	dm_realmode = gi.cvar( "dm_realmode", "0", CVAR_LATCH|CVAR_SERVERINFO);
+	//dm_realmode = gi.cvar( "dm_realmode", "0", CVAR_LATCH|CVAR_SERVERINFO);//GUNRACE_DISABLED
+	dm_realmode = gi.cvar( "dm_realmode", "0",CVAR_NOSET);//GUNRACE_ADD
 	
 	g_mapcycle_file = gi.cvar( "g_mapcycle_file", "", 0);
 // Ridah, done.

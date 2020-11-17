@@ -294,7 +294,7 @@ qboolean ACECM_Commands(edict_t *ent);
 void	 ACECM_LevelBegin(void); //hypov8 add
 void     ACECM_LevelEnd(void);
 void	 ACECM_BotDebug(qboolean changeState); //add hypov8
-void	 ACECM_BotAdd(char *cmd2, char *cmd3, char *cmd4); //add hypov8
+void	 ACECM_BotAdd(char *name, char *skin, char *team); //add hypov8. should be moved to ace spawn
 int		 ACECM_ReturnBotSkillWeb(void); //add hypov8
 
 /////////////////
@@ -352,7 +352,7 @@ void     ACESP_PutClientInServer (edict_t *bot, int team);
 void     ACESP_Respawn (edict_t *self);
 edict_t *ACESP_FindFreeClient (void);
 void     ACESP_SetName(edict_t *bot, char *name, char *skin);
-void     ACESP_SpawnBot (char *team, char *name, char *skin, char *userinfo);
+void     ACESP_SpawnBot (char *name, char *skin, char *team, char *userinfo);
 void     ACESP_ReAddBots();
 void     ACESP_RemoveBot(char *name, qboolean saveBotFile);
 void	 safe_cprintf (edict_t *ent, int printlevel, char *fmt, ...);
@@ -361,6 +361,8 @@ void     safe_bprintf (int printlevel, char *fmt, ...);
 void     safe_ConsolePrintf(int printlevel, char *fmt, ...); //add hypov8
 void     debug_printf (char *fmt, ...);
 void	 ACECM_LevelEnd(void);
+
+void	ACESP_FreeBots(void); //fix CNCT issue
 
 //GUNRACE_ADD
 ///////////

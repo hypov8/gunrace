@@ -3,7 +3,7 @@
 //									//
 //////////////////////////////////////
 //max wep count
-#define	GR_WEPS	11 //match grWeps_t grWeps //hypo todo: is also in g_weapon.c
+#define	GR_WEPS	13 //match grWeps_t grWeps //hypo todo: is also in g_weapon.c
 //hypov8 todo add new weps
 
 typedef struct grWeps_s

@@ -119,7 +119,7 @@ void ACEAI_Think (edict_t *self)
 #ifndef HYPODEBUG //stop bot timeout
 	if (self->acebot.botMoveDirVel > 3) //if(VectorLength(self->velocity) > 37) //
 #endif
-	self->acebot.suicide_timeout = level.time + 12.0;
+		self->acebot.suicide_timeout = level.time + 12.0;
 
 	if (self->acebot.suicide_timeout < level.time)
 	{

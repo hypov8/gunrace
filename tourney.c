@@ -26,7 +26,11 @@ int fph_scoreboard;
 int num_maps;
 int num_netnames;
 int num_ips;
-int enable_bots; // ACEBOT_ADD 
+// ACEBOT_ADD 
+int enable_bots;
+int enable_addbot;		//elect admin command
+int enable_removebot;	//elect admin command
+// ACEBOT_END 
 
 int fixed_gametype;
 int enable_password;
@@ -134,13 +138,15 @@ qboolean ResetServer (qboolean ifneeded) // completely resets the server includi
 	if (default_teamplay[0])
 //GUNRACE_START
 	{
-		gi.cvar_set("teamplay", "0"); //GUNRACE_ADD //G()^T Deleted: default_teamplay
-		safe_bprintf(PRINT_HIGH, "Teamplay is only free for all");
+		gi.cvar_set("teamplay", "0"); //G()^T Deleted: default_teamplay
+		safe_bprintf(PRINT_HIGH, "Team play disabled, only free for all available");
 	}
 //GUNRACE_END
+
 // ACEBOT_ADD
 	ACECM_LevelEnd();
 // ACEBOT_END
+
 	if (default_dm_realmode[0])
 		gi.cvar_set("dm_realmode", default_dm_realmode);
 	gi.cvar_set("cheats", "0");

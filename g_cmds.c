@@ -397,6 +397,7 @@ Cmd_Give_f
 Give items to a client
 ==================
 */
+extern int	auto_rounds[];//hypov8
 void Cmd_Give_f (edict_t *ent)
 {
 	char		*name;
@@ -465,6 +466,7 @@ void Cmd_Give_f (edict_t *ent)
 
 	if (give_all || Q_stricmp(name, "weapons") == 0)
 	{
+		int j;
 		for (i=0 ; i<game.num_items ; i++)
 		{
 			it = itemlist + i;
@@ -473,6 +475,8 @@ void Cmd_Give_f (edict_t *ent)
 			if (!(it->flags & IT_WEAPON))
 				continue;
 			
+
+
 			// ent->client->pers.inventory[i] += 1;
 			ent->client->pers.inventory[i] = 1;
 			if (it->flags & IT_SILENCER)
@@ -480,6 +484,15 @@ void Cmd_Give_f (edict_t *ent)
 				ent->client->pers.silencer_shots = 20;
 			}
 		}
+
+		//hypov8 instantly fill ammo in gun
+		for (j = 0; j < MAX_WEAPONS; j++)
+		{
+			//if (!ent->client->pers.weapon_clip[j])
+			ent->client->pers.weapon_clip[j] = auto_rounds[j]; //todo QweryClipIndex
+		}
+
+
 		if (!give_all)
 			return;
 	}
@@ -1999,9 +2012,12 @@ void Cmd_CommandList_f (edict_t *ent)
 
 	cprintf(ent, PRINT_HIGH, "\nCurrent Console Commands\n"
 		"========================\n");
-	strcpy(buf, "commands, motd, settings, players, curselist, maplist, changemap, setweaponfrags, setweaponorder"); //GUNRACE_ADD weaponfrags
-	if (enable_bots) // ACWBOT_ADD
-		strcat(buf, ", botskill");
+	strcpy(buf, "commands, motd, settings, players, curselist, maplist, changemap\n");
+
+ // GUNRACE_ADD
+	strcat(buf, "setweaponfrags, setweaponorder");
+ // GUNRACE_END
+
 	if (antilag->value)
 		strcat(buf, ", antilag");
 	if (admincode[0] || ent->client->pers.rconx[0] && ent->client->pers.admin == NOT_ADMIN)
@@ -2012,9 +2028,22 @@ void Cmd_CommandList_f (edict_t *ent)
 		strcat(buf, ", elect");
 	if (ent->client->pers.admin > NOT_ADMIN)
 	{
+ // ACEBOT_ADD
+		if (enable_bots)
+		{
+			strcat(buf, "\nbotskill(0-10)");
+			if (enable_addbot)
+				strcat(buf, ", addbot(name skin)");
+			if (enable_removebot)
+				strcat(buf, ", removebot(name/all/single)");
+			//new line
+			//strcat(buf, "\n");
+		}
+ // ACEBOT_END
+
 		//if (teamplay->value)
 		//	strcat(buf, ", matchsetup, matchscore, matchstart, matchend, team1name, team2name");
-		strcat(buf, ", resetserver, settimelimit, setdmflags, setidletime, toggle_asc, toggle_bunny, toggle_shadows, toggle_zoom"); //, setfraglimit, setcashlimit
+		strcat(buf, "\nresetserver, settimelimit, setdmflags, setidletime, toggle_asc, toggle_bunny, toggle_shadows, toggle_zoom"); //, setfraglimit, setcashlimit
 		if (teamplay->value)
 			strcat(buf, ", toggle_spec");
 		else
@@ -2025,8 +2054,10 @@ void Cmd_CommandList_f (edict_t *ent)
 			strcat(buf, ", setpassword");
 		//if (!fixed_gametype)
 		//	strcat(buf, ", setdm_realmode, setteamplay");
-	} else if (ent->client->pers.rconx[0])
+	} 
+	else if (ent->client->pers.rconx[0])
 		strcat(buf, ", resetserver, clientlist, mute");
+
 	cprintf(ent, PRINT_HIGH, "%s\n", buf);
 	if (ent->client->pers.admin > NOT_ADMIN && !fixed_gametype)
 		cprintf(ent, PRINT_HIGH,
@@ -2547,7 +2578,9 @@ void Cmd_SetWeaponorder_f(edict_t *ent, char *value) //add goat
 	else
 		cprintf(ent, PRINT_HIGH, "You do not have admin, but weaponorder is %s\n", weaponorder->string);
 }
+//GUNRACE_END
 
+//ACEBOT_ADD
 void Cmd_SetBotSkill_f(edict_t *ent, char *value) //add hypov8
 {
 	if (!enable_bots)
@@ -2582,6 +2615,46 @@ void Cmd_SetBotSkill_f(edict_t *ent, char *value) //add hypov8
 	}
 	else
 		cprintf(ent, PRINT_HIGH, "You do not have admin, but botskill is %d of 10 (sv_botskill %s)\n", ACECM_ReturnBotSkillWeb(), sv_botskill->string);
+}
+
+void Cmd_AddBot_f(edict_t *ent) //add hypov8
+{
+	if (!enable_bots)
+		return;
+
+	if (!enable_addbot)
+		return;
+
+	if (ent->client->pers.admin > NOT_ADMIN)
+	{
+		//add the bot
+		ACECM_BotAdd(gi.argv(1), gi.argv(2), gi.argv(3));
+
+		//send msg to admin
+		cprintf(ent, PRINT_HIGH, "This setting takes effect immediately\n");
+	}
+	else
+		cprintf(ent, PRINT_HIGH, "You do not have admin\n");
+}
+
+void Cmd_RemoveBot_f(edict_t *ent) //add hypov8
+{
+	if (!enable_bots)
+		return;
+
+	if (!enable_removebot)
+		return;
+
+	if (ent->client->pers.admin > NOT_ADMIN)
+	{
+		//remove the bot
+    	ACESP_RemoveBot(gi.argv(1), true);
+
+		//send msg to admin
+		cprintf(ent, PRINT_HIGH, "This setting takes effect immediately\n");
+	}
+	else
+		cprintf(ent, PRINT_HIGH, "You do not have admin\n");
 }
 // ACEBOT_END
 
@@ -3550,6 +3623,13 @@ void ClientCommand (edict_t *ent)
 // ACEBOT_ADD
 	else if (Q_stricmp (cmd, "botskill") == 0) //add hypov8
 		Cmd_SetBotSkill_f(ent, gi.argv(1));
+
+	//hypov8 todo: addbot/removebot gunrace.ini
+	else if (Q_stricmp (cmd, "addbot") == 0) //add hypov8
+		Cmd_AddBot_f(ent);
+	else if (Q_stricmp (cmd, "removebot") == 0) //add hypov8
+		Cmd_RemoveBot_f(ent);
+
 // ACEBOT_END
 
 	else if (Q_stricmp (cmd, "yes") == 0)

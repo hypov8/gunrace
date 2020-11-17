@@ -37,9 +37,11 @@ static void P_ProjectSource (gclient_t *client, vec3_t point, vec3_t distance, v
 #define MAX_SSHOTGUN_ROUNDS		16
 #define MAX_M41AGUN_ROUNDS		30
 #define MAX_UZI_ROUNDS		    80
-#define MAX_M60_ROUNDS			80
-#define MAX_SG3_ROUNDS			20
-#define MAX_SG4_ROUNDS			20
+#define MAX_M60_ROUNDS			60
+#define MAX_BENELLI_ROUNDS		12
+#define MAX_SPAS12_ROUNDS		12
+#define MAX_MP5_ROUNDS			30
+#define MAX_AK47_ROUNDS			40
 	//hypov8 todo add new weps
 //GUNRACE_END
 
@@ -53,16 +55,21 @@ int	auto_rounds[] =
 	MAX_TOMMYGUN_ROUNDS,
 	MAX_BARMACHINEGUN_ROUNDS,
 	MAX_GRENADELAUNCHER_ROUNDS,
-	MAX_ROCKETLAUNCHER_ROUNDS,
-	MAX_FLAMEGUN_ROUNDS,
+#if 0 //GUNRACE_DISABLED
+	//MAX_ROCKETLAUNCHER_ROUNDS,
+	//MAX_FLAMEGUN_ROUNDS,
+#endif
 //GUNRACE_START
 	MAX_SSHOTGUN_ROUNDS,
 	MAX_M41AGUN_ROUNDS,
 	MAX_UZI_ROUNDS,
 	MAX_M60_ROUNDS,
-	MAX_SG3_ROUNDS,
-	MAX_SG4_ROUNDS,
+	MAX_BENELLI_ROUNDS,
+	MAX_SPAS12_ROUNDS,
+	MAX_MP5_ROUNDS,
+	MAX_AK47_ROUNDS,
 	//hypov8 todo add new weps
+	//hypov8 needs to match clip_t order
 //GUNRACE_END
 	0
 };
@@ -206,15 +213,15 @@ void ChangeClipIndex (edict_t *ent)
 		ent->client->clip_index = CLIP_SHOTGUN;
 	else if (!strcmp(ent->client->pers.weapon->pickup_name, "Tommygun"))
 		ent->client->clip_index = CLIP_TOMMYGUN;
-	else if (!strcmp(ent->client->pers.weapon->pickup_name, "FlameThrower"))
-		ent->client->clip_index = CLIP_FLAMEGUN;
-	else if (!strcmp(ent->client->pers.weapon->pickup_name, "Bazooka"))
-		ent->client->clip_index = CLIP_ROCKETS;
+	//else if (!strcmp(ent->client->pers.weapon->pickup_name, "FlameThrower"))
+		//ent->client->clip_index = CLIP_FLAMEGUN; //GUNRACE_DISABLED
+	//else if (!strcmp(ent->client->pers.weapon->pickup_name, "Bazooka"))
+		//ent->client->clip_index = CLIP_ROCKETS; //GUNRACE_DISABLED
 	else if (!strcmp(ent->client->pers.weapon->pickup_name, "Grenade Launcher"))
 		ent->client->clip_index = CLIP_GRENADES;
 	// JOSEPH 16-APR-99
 	else if (!strcmp(ent->client->pers.weapon->pickup_name, "Heavy machinegun"))
-		ent->client->clip_index = CLIP_SLUGS;
+		ent->client->clip_index = CLIP_308;
 	// END JOSEPH
 	//GUNRACE_START
 
@@ -228,10 +235,14 @@ void ChangeClipIndex (edict_t *ent)
 		ent->client->clip_index = CLIP_M60;
 	else if (!strcmp(ent->client->pers.weapon->pickup_name, "Machete"))
 		ent->client->clip_index = CLIP_MACHETE;
-	else if (!strcmp(ent->client->pers.weapon->pickup_name, "SG3"))
-		ent->client->clip_index = CLIP_SG3;
-	else if (!strcmp(ent->client->pers.weapon->pickup_name, "SG4"))
-		ent->client->clip_index = CLIP_SG4;
+	else if (!strcmp(ent->client->pers.weapon->pickup_name, "benelli"))
+		ent->client->clip_index = CLIP_BENELLI;
+	else if (!strcmp(ent->client->pers.weapon->pickup_name, "spas12"))
+		ent->client->clip_index = CLIP_SPAS12;
+	else if (!strcmp(ent->client->pers.weapon->pickup_name, "mp5"))
+		ent->client->clip_index = CLIP_MP5;
+	else if (!strcmp(ent->client->pers.weapon->pickup_name, "ak47"))
+		ent->client->clip_index = CLIP_AK47;
 	//hypov8 todo add new weps
 	//GUNRACE_END
 //GUNRACE_TODO
@@ -253,15 +264,17 @@ int QweryClipIndex (gitem_t *item)
 		return CLIP_SHOTGUN;
 	else if (!strcmp(item->pickup_name, "Tommygun"))
 		return CLIP_TOMMYGUN;
-	else if (!strcmp(item->pickup_name, "FlameThrower"))
-		return CLIP_FLAMEGUN;
-	else if (!strcmp(item->pickup_name, "Bazooka"))
-		return CLIP_ROCKETS;
+#if 0  //GUNRACE_DISABLED
+	//else if (!strcmp(item->pickup_name, "FlameThrower"))
+		//return CLIP_FLAMEGUN;
+	//else if (!strcmp(item->pickup_name, "Bazooka"))
+		//return CLIP_ROCKETS;
+#endif
 	else if (!strcmp(item->pickup_name, "Grenade Launcher"))
 		return CLIP_GRENADES;
 	// JOSEPH 16-APR-99
 	else if (!strcmp(item->pickup_name, "Heavy machinegun"))
-		return CLIP_SLUGS;
+		return CLIP_308;
 	// END JOSEPH
 	//GUNRACE_START
 	else if (!strcmp(item->pickup_name, "SuperShotgun"))
@@ -274,10 +287,14 @@ int QweryClipIndex (gitem_t *item)
 		return CLIP_M60;
 	else if (!strcmp(item->pickup_name, "Machete"))
 		return CLIP_MACHETE;
-	else if (!strcmp(item->pickup_name, "SG3"))
-		return CLIP_SG3;
-	else if (!strcmp(item->pickup_name, "SG4"))
-		return CLIP_SG4;
+	else if (!strcmp(item->pickup_name, "benelli"))
+		return CLIP_BENELLI;
+	else if (!strcmp(item->pickup_name, "spas12"))
+		return CLIP_SPAS12;
+	else if (!strcmp(item->pickup_name, "mp5"))
+		return CLIP_MP5;
+	else if (!strcmp(item->pickup_name, "ak47"))
+		return CLIP_AK47;
 	//hypov8 todo add new weps
 	//GUNRACE_END
 //GUNRACE_TODO
@@ -369,46 +386,53 @@ void ChangeWeapon (edict_t *ent)
 		else
 			ent->client->ps.gunindex = gi.modelindex(ent->client->pers.weapon->view_model);
 
+		//reset gun stat
 		memset(&(ent->client->ps.model_parts[0]), 0, sizeof(model_part_t) * MAX_MODEL_PARTS);
 		ent->client->ps.num_parts = 0;
 
 		ent->client->ps.num_parts++;
 		// ent->client->ps.model_parts[PART_HEAD].modelindex = gi.modelindex(ent->client->pers.weapon->view_model);
-		ent->client->ps.model_parts[PART_HEAD].modelindex = ent->client->ps.gunindex;//gi.modelindex(ent->client->pers.weapon->view_model);
+		ent->client->ps.model_parts[PART_GUN_BODY].modelindex = ent->client->ps.gunindex;//gi.modelindex(ent->client->pers.weapon->view_model);
 		for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-			ent->client->ps.model_parts[PART_HEAD].skinnum[i] = 0; // will we have more than one skin???
+			ent->client->ps.model_parts[PART_GUN_BODY].skinnum[i] = 0; // will we have more than one skin???
 
 		// HACK, set arm model
 		if (!strcmp(ent->client->pers.weapon->pickup_name, "Shotgun"))
 		{
 			// Ridah, HACK: changed this to use PART_LEGS, since PART_BODY sometimes doesn't show up
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_LEGS].modelindex = gi.modelindex("models/weapons/shotgun/hand.mdx");
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/shotgun/hand.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_LEGS].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0; // will we have more than one skin???
 		}
 		//GUNRACE_START
 		//G()^T Supershotgun
 		else if (!strcmp(ent->client->pers.weapon->pickup_name, "SuperShotgun"))
 		{
-			//null;
+			/*ent->client->ps.num_parts++;
+			ent->client->ps.model_parts[PART_GUN_MISC].modelindex = gi.modelindex("models/weapons/v_shotg2/v_spr.mdx");	//sprite	
+			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+				ent->client->ps.model_parts[PART_GUN_MISC].skinnum[i] = 0;*/ //hypov8 note can only display 1 sprite at a time
 		}
 		else if (!strcmp(ent->client->pers.weapon->pickup_name, "Machete")) //hypov8
 		{
-			// Ridah, HACK: changed this to use PART_LEGS, since PART_BODY sometimes doesn't show up
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_BODY].modelindex = gi.modelindex("models/weapons/v_machete/hand.mdx");
-			//for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-			//	ent->client->ps.model_parts[PART_BODY].skinnum[i] = 0; // will we have more than one skin???
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_machete/hand.mdx");
+			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0;
 		}
 
 		else if (!strcmp(ent->client->pers.weapon->pickup_name, "M41a"))
 		{
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_CIGAR].modelindex = gi.modelindex("models/weapons/v_m41a/lhand.mdx");
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_m41a/lhand.mdx");
+			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0;
 
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_LEGS].modelindex = gi.modelindex("models/weapons/v_m41a/rhand.mdx");
+			ent->client->ps.model_parts[PART_GUN_R_HAND].modelindex = gi.modelindex("models/weapons/v_m41a/rhand.mdx");
+			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+				ent->client->ps.model_parts[PART_GUN_R_HAND].skinnum[i] = 0;
 		}
 		else if (!strcmp(ent->client->pers.weapon->pickup_name, "Uzi"))
 		{
@@ -416,20 +440,51 @@ void ChangeWeapon (edict_t *ent)
 		}
 		else if (!strcmp(ent->client->pers.weapon->pickup_name, "M60"))
 		{
-			//null;
-		}
-		else if (!strcmp(ent->client->pers.weapon->pickup_name, "SG3"))
-		{
-			// Ridah, HACK: changed this to use PART_LEGS, since PART_BODY sometimes doesn't show up
-			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_LEGS].modelindex = gi.modelindex("models/weapons/v_shotg3/hand.mdx");
+			ent->client->ps.num_parts++; //arms
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_m60/v_arms.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_LEGS].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0;
+
+			ent->client->ps.num_parts++; //fingers
+			ent->client->ps.model_parts[PART_GUN_FINGERS].modelindex = gi.modelindex("models/weapons/v_m60/v_thumb.mdx");
+			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+				ent->client->ps.model_parts[PART_GUN_FINGERS].skinnum[i] = 0;
 		}
-		else if (!strcmp(ent->client->pers.weapon->pickup_name, "SG4"))
+		else if (!strcmp(ent->client->pers.weapon->pickup_name, "spas12"))
 		{
-			//null;
+			ent->client->ps.num_parts++;
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_spas12/v_hand.mdx");
+			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0;
 		}
+		else if (!strcmp(ent->client->pers.weapon->pickup_name, "benelli"))
+		{
+			ent->client->ps.num_parts++;
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_benelli/v_hand.mdx");
+			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0;
+		}
+		else if (!strcmp(ent->client->pers.weapon->pickup_name, "mp5"))
+		{
+			ent->client->ps.num_parts++;
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_mp5/v_hand.mdx");
+			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0;
+		}
+		//ak47
+		else if (!strcmp(ent->client->pers.weapon->pickup_name, "ak47"))
+		{
+			ent->client->ps.num_parts++;		//magazine
+			ent->client->ps.model_parts[PART_GUN_CLIP].modelindex = gi.modelindex("models/weapons/v_ak47/v_clip.mdx");
+			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+				ent->client->ps.model_parts[PART_GUN_CLIP].skinnum[i] = 0;
+
+			ent->client->ps.num_parts++;		//arms
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_ak47/v_hand.mdx");
+			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0;
+		}
+
 		//hypov8 todo add new weps
 		//GUNRACE_END
 		// JOSEPH 12-OCT-98
@@ -437,134 +492,140 @@ void ChangeWeapon (edict_t *ent)
 		else if (!strcmp(ent->client->pers.weapon->pickup_name, "Pipe"))
 		{
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_BODY].modelindex = gi.modelindex("models/weapons/blakjak/hand.mdx");
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/blakjak/hand.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_BODY].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0; // will we have more than one skin???
 		}
 		// END JOSEPH
 		// JOSEPH 19-JAN-99
 		else if (!strcmp(ent->client->pers.weapon->pickup_name, "Crowbar"))
 		{
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_BODY].modelindex = gi.modelindex("models/weapons/crowbar/hand.mdx");
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/crowbar/hand.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_BODY].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0; // will we have more than one skin???
 		}
 		// END JOSEPH
 
 		else if (!strcmp(ent->client->pers.weapon->pickup_name, "FlameThrower"))
 		{
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_BODY].modelindex = gi.modelindex("models/weapons/v_flamegun/hand.mdx");
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_flamegun/hand.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_BODY].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0; // will we have more than one skin???
 		}
 		// END JOSEPH
 		// JOSEPH 4-MAR-99
 		else if (!strcmp(ent->client->pers.weapon->pickup_name, "Bazooka"))
 		{
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_BODY].modelindex = gi.modelindex("models/weapons/v_rocket_launcher/hand.mdx");
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_rocket_launcher/hand.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_BODY].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0; // will we have more than one skin???
 
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_LEGS].modelindex = gi.modelindex("models/weapons/v_rocket_launcher/shell_a.mdx");
+			ent->client->ps.model_parts[PART_GUN_MISC].modelindex = gi.modelindex("models/weapons/v_rocket_launcher/shell_a.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_LEGS].skinnum[i] = 0; // will we have more than one skin???		
-
-			// note to self: not using this anymore
-			/*
-			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_GUN].modelindex = gi.modelindex("models/weapons/v_rocket_launcher/shell_b.mdx");
-			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_GUN].skinnum[i] = 0; // will we have more than one skin???		
-			*/
+				ent->client->ps.model_parts[PART_GUN_MISC].skinnum[i] = 0; // will we have more than one skin???		
 
 			//posible conflict - tical
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_GUN2].modelindex = gi.modelindex("models/weapons/v_rocket_launcher/clip.mdx");
+			ent->client->ps.model_parts[PART_GUN_CLIP].modelindex = gi.modelindex("models/weapons/v_rocket_launcher/clip.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_GUN2].skinnum[i] = 0; // will we have more than one skin???		
+				ent->client->ps.model_parts[PART_GUN_CLIP].skinnum[i] = 0; // will we have more than one skin???		
 		}
 		// END JOSEPH
 		else if (!strcmp (ent->client->pers.weapon->pickup_name , "SPistol"))
 		{
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_BODY].modelindex = gi.modelindex("models/weapons/silencer_mdx/handl.mdx");
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/silencer_mdx/handl.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_BODY].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0; // will we have more than one skin???
 			
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_LEGS].modelindex = gi.modelindex("models/weapons/silencer_mdx/handr.mdx");
+			ent->client->ps.model_parts[PART_GUN_R_HAND].modelindex = gi.modelindex("models/weapons/silencer_mdx/handr.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_LEGS].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_R_HAND].skinnum[i] = 0; // will we have more than one skin???
 		
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_GUN].modelindex = gi.modelindex("models/weapons/silencer_mdx/clip.mdx");
+			ent->client->ps.model_parts[PART_GUN_CLIP].modelindex = gi.modelindex("models/weapons/silencer_mdx/clip.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_GUN].skinnum[i] = 0;
+				ent->client->ps.model_parts[PART_GUN_CLIP].skinnum[i] = 0;
 
-			ent->client->ps.model_parts[PART_GUN].invisible_objects = (1<<0 | 1<<1);
+			//ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = (1<<0 | 1<<1);
 		}
 		else if (!strcmp (ent->client->pers.weapon->pickup_name , "Pistol"))
 		{
-			//hypov8 left hand is only loaded for reloading etc..
-			//GUNRACE_DISABLED	ent->client->ps.num_parts++;
-			//GUNRACE_DISABLED	ent->client->ps.model_parts[PART_BODY].modelindex = gi.modelindex("models/weapons/v_colt/handl.mdx");
-			//GUNRACE_DISABLED	for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-			//GUNRACE_DISABLED	ent->client->ps.model_parts[PART_BODY].skinnum[i] = 0; // will we have more than one skin???
-			
+#if 1 
+//GUNRACE_START	//hypov8 left hand is now left gun(sprite fix)
+			if (ent->client->pers.pistol_mods & WEAPON_MOD_DAMAGE)
+				ent->client->ps.model_parts[PART_GUN_MISC].modelindex = gi.modelindex("models/weapons/v_colt/magnum_l.mdx");
+			else
+				ent->client->ps.model_parts[PART_GUN_MISC].modelindex = gi.modelindex("models/weapons/v_colt/pistol_l.mdx");
+
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_LEGS].modelindex = gi.modelindex("models/weapons/v_colt/handr.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_LEGS].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_MISC].skinnum[i] = 0; // will we have more than one skin???
+//GUNRACE_END
+#else
+			ent->client->ps.num_parts++;
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_colt/handl.mdx");
+			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0; // will we have more than one skin???
+
+#endif			
+			ent->client->ps.num_parts++;
+			ent->client->ps.model_parts[PART_GUN_R_HAND].modelindex = gi.modelindex("models/weapons/v_colt/handr.mdx");
+			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
+				ent->client->ps.model_parts[PART_GUN_R_HAND].skinnum[i] = 0; // will we have more than one skin???
 		
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_GUN].modelindex = gi.modelindex("models/weapons/v_colt/clip.mdx");
+			ent->client->ps.model_parts[PART_GUN_CLIP].modelindex = gi.modelindex("models/weapons/v_colt/clip.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_GUN].skinnum[i] = 0;
+				ent->client->ps.model_parts[PART_GUN_CLIP].skinnum[i] = 0;
 		}
 		else if (!strcmp(ent->client->pers.weapon->pickup_name, "Tommygun"))
 		{
 			// Ridah, hacked this, we're still having disappearing hands after going from the Pistol ?!
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_CIGAR].modelindex = gi.modelindex("models/weapons/v_tomgun/lhand.mdx");
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_tomgun/lhand.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_CIGAR].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0; // will we have more than one skin???
 
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_LEGS].modelindex = gi.modelindex("models/weapons/v_tomgun/rhand.mdx");
+			ent->client->ps.model_parts[PART_GUN_R_HAND].modelindex = gi.modelindex("models/weapons/v_tomgun/rhand.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_LEGS].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_R_HAND].skinnum[i] = 0; // will we have more than one skin???
 		
 		}
 		// JOSEPH 16-APR-99
 		else if (!strcmp (ent->client->pers.weapon->pickup_name , "Heavy machinegun"))
 		{
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_LEGS].modelindex = gi.modelindex("models/weapons/v_hmg/lhand.mdx");
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_hmg/lhand.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_LEGS].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0; // will we have more than one skin???
 
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_BODY].modelindex = gi.modelindex("models/weapons/v_hmg/clip.mdx");
+			ent->client->ps.model_parts[PART_GUN_CLIP].modelindex = gi.modelindex("models/weapons/v_hmg/clip.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_BODY].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_CLIP].skinnum[i] = 0; // will we have more than one skin???
 			
 		}
 		// END JOSEPH
 		else if (!strcmp (ent->client->pers.weapon->pickup_name , "Grenade Launcher"))
 		{
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_LEGS].modelindex = gi.modelindex("models/weapons/v_grenade_launcher/lhand.mdx");
+			ent->client->ps.model_parts[PART_GUN_L_HAND].modelindex = gi.modelindex("models/weapons/v_grenade_launcher/lhand.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_LEGS].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_L_HAND].skinnum[i] = 0; // will we have more than one skin???
 
 			ent->client->ps.num_parts++;
-			ent->client->ps.model_parts[PART_BODY].modelindex = gi.modelindex("models/weapons/v_grenade_launcher/clip.mdx");
+			ent->client->ps.model_parts[PART_GUN_CLIP].modelindex = gi.modelindex("models/weapons/v_grenade_launcher/clip.mdx");
 			for (i=0; i<MAX_MODELPART_OBJECTS; i++)
-				ent->client->ps.model_parts[PART_BODY].skinnum[i] = 0; // will we have more than one skin???
+				ent->client->ps.model_parts[PART_GUN_CLIP].skinnum[i] = 0; // will we have more than one skin???
+
+			//ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = (1<<0 | 1<<1);
 		}
 	}
 
@@ -667,13 +728,13 @@ void NoAmmoWeaponChange (edict_t *ent)
 
 	// JOSEPH 16-APR-99
 	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("heavy machinegun"))]
-		&& (ent->client->pers.weapon_clip[CLIP_SLUGS] || ent->client->pers.inventory[ITEM_INDEX(FindItem("308cal"))]) )
+		&& (ent->client->pers.weapon_clip[CLIP_308] || ent->client->pers.inventory[ITEM_INDEX(FindItem("308cal"))]) )
 	{
 		ent->client->newweapon = FindItem ("heavy machinegun");
 		return;
 	}
 	// END JOSEPH
-
+#if 0  //GUNRACE_DISABLED
 	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("flamethrower"))]
 		&& ent->client->pers.inventory[ITEM_INDEX(FindItem("gas"))] )
 	{
@@ -687,7 +748,7 @@ void NoAmmoWeaponChange (edict_t *ent)
 		ent->client->newweapon = FindItem ("Bazooka");
 		return;
 	}
-
+#endif
 	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("tommygun"))]
 		&& (ent->client->pers.weapon_clip[CLIP_TOMMYGUN] || ent->client->pers.inventory[ITEM_INDEX(FindItem("bullets"))]) )
 	{
@@ -729,18 +790,31 @@ void NoAmmoWeaponChange (edict_t *ent)
 		ent->client->newweapon = FindItem ("M60");
 		return;
 	}
-	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("SG3"))]
+	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("benelli"))]
 		&& (ent->client->pers.weapon_clip[CLIP_SSHOTGUN] || ent->client->pers.inventory[ITEM_INDEX(FindItem("Shells"))]) )
 	{
-		ent->client->newweapon = FindItem ("SG3");
+		ent->client->newweapon = FindItem ("benelli");
 		return;
 	}
-	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("SG4"))]
+	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("spas12"))]
 		&& (ent->client->pers.weapon_clip[CLIP_SSHOTGUN] || ent->client->pers.inventory[ITEM_INDEX(FindItem("Shells"))]) )
 	{
-		ent->client->newweapon = FindItem ("SG4");
+		ent->client->newweapon = FindItem ("spas12");
 		return;
 	}
+	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("mp5"))]
+		&& (ent->client->pers.weapon_clip[CLIP_SSHOTGUN] || ent->client->pers.inventory[ITEM_INDEX(FindItem("bullets"))]) )
+	{
+		ent->client->newweapon = FindItem ("mp5");
+		return;
+	}
+	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("ak47"))]
+		&& (ent->client->pers.weapon_clip[CLIP_SSHOTGUN] || ent->client->pers.inventory[ITEM_INDEX(FindItem("bullets"))]) )
+	{
+		ent->client->newweapon = FindItem ("ak47");
+		return;
+	}
+
 	//hypov8 todo add new weps
 	//GUNRACE_END			
 	if ( ent->client->pers.inventory[ITEM_INDEX(FindItem("pistol"))]
@@ -1191,12 +1265,22 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_RELOAD_LAS
 				ent->client->ps.gunframe = FRAME_FIRE_FIRST;
 				ent->client->weaponstate = WEAPON_FIRING;
 			}
-			else if (ent->client->clip_index == CLIP_SG3 && ent->client->pers.weapon_clip[ent->client->clip_index] >= 1)
+			else if (ent->client->clip_index == CLIP_BENELLI && ent->client->pers.weapon_clip[ent->client->clip_index] >= 1)
 			{
 				ent->client->ps.gunframe = FRAME_FIRE_FIRST;
 				ent->client->weaponstate = WEAPON_FIRING;
 			}
-			else if (ent->client->clip_index == CLIP_SG4 && ent->client->pers.weapon_clip[ent->client->clip_index] >= 1)
+			else if (ent->client->clip_index == CLIP_SPAS12 && ent->client->pers.weapon_clip[ent->client->clip_index] >= 1)
+			{
+				ent->client->ps.gunframe = FRAME_FIRE_FIRST;
+				ent->client->weaponstate = WEAPON_FIRING;
+			}
+			else if (ent->client->clip_index == CLIP_MP5 && ent->client->pers.weapon_clip[ent->client->clip_index] >= 1)
+			{
+				ent->client->ps.gunframe = FRAME_FIRE_FIRST;
+				ent->client->weaponstate = WEAPON_FIRING;
+			}
+			else if (ent->client->clip_index == CLIP_AK47 && ent->client->pers.weapon_clip[ent->client->clip_index] >= 1)
 			{
 				ent->client->ps.gunframe = FRAME_FIRE_FIRST;
 				ent->client->weaponstate = WEAPON_FIRING;
@@ -1208,7 +1292,7 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_RELOAD_LAS
 				ent->client->ps.gunframe = FRAME_FIRE_FIRST;
 				ent->client->weaponstate = WEAPON_FIRING;
 			}
-			else if (ent->client->clip_index == CLIP_SLUGS && ent->client->pers.weapon_clip[ent->client->clip_index] >=1)
+			else if (ent->client->clip_index == CLIP_308 && ent->client->pers.weapon_clip[ent->client->clip_index] >=1)
 			{
 				ent->client->ps.gunframe = FRAME_FIRE_FIRST;
 				ent->client->weaponstate = WEAPON_FIRING;
@@ -1218,11 +1302,13 @@ void Weapon_Generic (edict_t *ent, int FRAME_ACTIVATE_LAST, int FRAME_RELOAD_LAS
 				ent->client->ps.gunframe = FRAME_FIRE_FIRST;
 				ent->client->weaponstate = WEAPON_FIRING;
 			}
+#if 0  //GUNRACE_DISABLED
 			else if (ent->client->clip_index == CLIP_ROCKETS && ent->client->pers.weapon_clip[ent->client->clip_index] >=1)
 			{
 				ent->client->ps.gunframe = FRAME_FIRE_FIRST;
 				ent->client->weaponstate = WEAPON_FIRING;
 			}
+#endif
 			else if ((!ent->client->ammo_index) || 
 				( ent->client->pers.inventory[ent->client->ammo_index] >= ent->client->pers.weapon->quantity))
 			{
@@ -1669,7 +1755,7 @@ void Weapon_Blackjack (edict_t *ent)
 	
 	Weapon_Generic (ent, 5, 13, 31, 36, pause_frames, fire_frames, Weapon_Blackjack_Hit);
 
-	ent->client->ps.model_parts[PART_BODY].invisible_objects = 0;
+	ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0;
 	
 }
 // END JOSEPH
@@ -1736,7 +1822,7 @@ void Weapon_Crowbar (edict_t *ent)
 	
 	Weapon_Generic (ent, 5, 13, 31, 36, pause_frames, fire_frames, Weapon_Crowbar_Hit);
 
-	ent->client->ps.model_parts[PART_BODY].invisible_objects = 0;
+	ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0;
 	
 }
 // END JOSEPH 
@@ -2052,10 +2138,10 @@ void Weapon_Pistol(edict_t *ent)
 
 	if (ent->client->ps.gunframe >= 10 && ent->client->ps.gunframe <= 28)
 	{
-		ent->client->ps.model_parts[PART_BODY].invisible_objects = 0;
+		ent->client->ps.model_parts[PART_GUN_R_HAND].invisible_objects = 0;
 	}
 	else
-		ent->client->ps.model_parts[PART_BODY].invisible_objects = (1 << 0 | 1 << 1);
+		ent->client->ps.model_parts[PART_GUN_R_HAND].invisible_objects = (1 << 0 | 1 << 1);
 
 	if (ent->client->ps.gunframe == 1)
 		gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/pistol/holster.wav"), 1, ATTN_NORM, 0);
@@ -2068,10 +2154,10 @@ void Weapon_Pistol(edict_t *ent)
 
 	if (ent->client->ps.gunframe >= 10 && ent->client->ps.gunframe <= 24)
 	{
-		ent->client->ps.model_parts[PART_GUN].invisible_objects = 0;
+		ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = 0;
 	}
 	else
-		ent->client->ps.model_parts[PART_GUN].invisible_objects = (1 << 0 | 1 << 1);
+		ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = (1 << 0 | 1 << 1);
 
 }
 
@@ -2225,21 +2311,21 @@ void Weapon_SPistol (edict_t *ent)
 
 	if (ent->client->ps.gunframe < 22)
 	{
-		ent->client->ps.model_parts[PART_BODY].invisible_objects = 0;
+		ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0;
 	}
 	else if (ent->client->weaponstate == WEAPON_RELOADING_SPISTOL && ent->client->ps.gunframe < 40)
 	{
 		if (ent->client->ps.gunframe < 39)
-		ent->client->ps.model_parts[PART_GUN].invisible_objects = 0;
+		ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = 0;
 		else
-			ent->client->ps.model_parts[PART_GUN].invisible_objects = (1<<0 | 1<<1);
+			ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = (1<<0 | 1<<1);
 
-		ent->client->ps.model_parts[PART_BODY].invisible_objects = 0;
+		ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0;
 	}
 	else
 	{
-		ent->client->ps.model_parts[PART_GUN].invisible_objects = (1<<0 | 1<<1);
-		ent->client->ps.model_parts[PART_BODY].invisible_objects = (1<<0 | 1<<1);
+		ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = (1<<0 | 1<<1);
+		ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = (1<<0 | 1<<1);
 	}
 
 	if (ent->client->ps.gunframe == 49)
@@ -2315,10 +2401,13 @@ void Weapon_SPistol (edict_t *ent)
 			
 
 	Weapon_Generic (ent, 20, 49, 65, 75, pause_frames, fire_frames, Weapon_SPistol_Fire);
+	ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0; //hypov8 unhide
+	ent->client->ps.model_parts[PART_GUN_R_HAND].invisible_objects = 0; //hypov8 unhide
+	ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = 0; //hypov8 unhide
+	//hypov8 un-used. missing invisible_objects code
 		
 	if (ent->client->ps.gunframe == 1)
 		gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/pistol/silencerattatch.wav"), 1, ATTN_NORM, 0);
-	
 	
 }
 
@@ -2339,9 +2428,10 @@ void Tommygun_Fire (edict_t *ent)
 	//vec3_t	fireorigin;
 	vec3_t		forward, right;
 	vec3_t		angles;
-	int			damage = 8;
+	int			damage = 14; //was 8(+mplayer add)
 	int			kick = 2;
 	vec3_t		offset;
+	int			wpFlags = MZ_MACHINEGUN; //tommygun sound
 
 	if (ent->waterlevel >= 2)
 	{
@@ -2362,8 +2452,8 @@ void Tommygun_Fire (edict_t *ent)
 		return;
 	}
 
-	if (deathmatch_value)
-		damage *= 1.75; //hypov8 =14
+	/*if (deathmatch_value)
+		damage *= 1.75;*/ //hypov8 =14
 
 	if (ent->client->pers.inventory[ent->client->ammo_index] == 0 && ent->client->pers.weapon_clip[ent->client->clip_index] == 0) 
 		return;
@@ -2408,12 +2498,38 @@ void Tommygun_Fire (edict_t *ent)
 			spreadH = 180;
 			spreadV = 280;
 		}
-		fire_bullet(ent, start, forward, damage, kick, spreadH, spreadV, MOD_MACHINEGUN);
+
+		//GURACE_START
+		if (ent->client->pers.weapon == FindItem("mp5"))
+		{
+			spreadH = 35;
+			spreadV = 35;
+			kick = 1;
+			fire_bullet(ent, start, forward, damage, kick, spreadH, spreadV, MOD_MP5);
+			wpFlags = MZ_PISTOL;
+		}
+		else if (ent->client->pers.weapon == FindItem("ak47"))
+		{
+			spreadH = 120;
+			spreadV = 150;
+			kick = 4;
+			damage = 20;
+			fire_bullet(ent, start, forward, damage, kick, spreadH, spreadV, MOD_MP5);
+			wpFlags = MZ_ROCKET; // MZ_SPISTOL;
+		}
+		else
+		{
+			damage = 14;
+			//hypov8 todo add new weps //machineguns
+			//GUNRACE_END
+			fire_bullet(ent, start, forward, damage, kick, spreadH, spreadV, MOD_MACHINEGUN);
+		}
 	}
 
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_MACHINEGUN | is_silenced);
+	
+	gi.WriteByte (wpFlags | is_silenced);
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	// Disable for unlimited ammo
@@ -2474,6 +2590,13 @@ void Weapon_Tommygun (edict_t *ent)
 
 				ent->client->pers.weapon_clip[ent->client->clip_index] = rounds;
 				ent->client->pers.inventory[ent->client->ammo_index] -= rounds;
+			//GURACE_START
+				if (ent->client->pers.weapon == FindItem("mp5"))
+					gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/mp5/cock.wav"), 1, ATTN_NORM, 0);
+				else if (ent->client->pers.weapon == FindItem("ak47"))
+					gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/ak47/cock.wav"), 1, ATTN_NORM, 0);
+				else
+			//GURACE_END
 				gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/machinegun/machgcock.wav"), 1, ATTN_NORM, 0);
 			}
 
@@ -2497,11 +2620,20 @@ void Weapon_Tommygun (edict_t *ent)
 
 			ent->client->pers.weapon_clip[ent->client->clip_index] = rounds;
 			ent->client->pers.inventory[ent->client->ammo_index] -= rounds;
-			gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/machinegun/machgcock.wav"), 1, ATTN_NORM, 0);
+		//GURACE_START
+			if (ent->client->pers.weapon == FindItem("mp5"))
+				gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/mp5/cock.wav"), 1, ATTN_NORM, 0);
+			else if (ent->client->pers.weapon == FindItem("ak47"))
+				gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/ak47/cock.wav"), 1, ATTN_NORM, 0);
+			else
+		//GURACE_END
+				gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/machinegun/machgcock.wav"), 1, ATTN_NORM, 0);
 		}
 	}
 
 	Weapon_Generic (ent, 3, 29, 40, 46, pause_frames, fire_frames, Tommygun_Fire);
+	ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0; //hypov8 unhide
+	ent->client->ps.model_parts[PART_GUN_R_HAND].invisible_objects = 0; //hypov8 unhide
 
 }
 // END JOSEPH
@@ -2615,22 +2747,48 @@ void Weapon_FlameThrower (edict_t *ent)
 
 	static int	fire_frames[]	= {6, 7, 8, 9, 10, 11, 12, 13};
 
-		Weapon_Generic (ent, 5, 13, 25, 31, pause_frames, fire_frames, FlameThrower_Fire);
+	Weapon_Generic (ent, 5, 13, 25, 31, pause_frames, fire_frames, FlameThrower_Fire);
+	ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0; //hypov8 unhide
 	
 }
 
 
+
+//GURACE_START
+#define SHOTGUN_RAISE_END 5
+
+#define SHOTGUN_SHOOT_START 6
+#define SHOTGUN_SHOOT_2ND 8 //8/9?
+#define SHOTGUN_SHOOT_3RD 11
+#define SHOTGUN_SHOOT_4TH 13
+#define SHOTGUN_SHOOT_END 16
+
+#define SHOTGUN_RELOAD_CYCLE_START  17
+#define SHOTGUN_RELOAD_CYCLE_END 
+
+#define SHOTGUN_RELOAD_CYCLE2_START  21
+#define SHOTGUN_RELOAD_CYCLE2_END 
+
+#define SHOTGUN_RELOAD_START 29
+#define SHOTGUN_RELOAD_END 32
+
+#define SHOTGUN_IDLE_START 33
+#define SHOTGUN_IDLE_END 40
+
+#define SHOTGUN_LOWER_START 41
+#define SHOTGUN_LOWER_END 45
+//GUNRACE_END
 /*
 	SHOTGUN
 */
-
 void shotgun_fire (edict_t *ent)
 {
 	vec3_t		start;
 	vec3_t		forward, right;
 	vec3_t		offset;
-	int			damage = 10; //hypov8 was 8
+	int			damage = 20; //hypov8 was 16
 	int			kick = 50;
+	int wpFlags = MZ_SHOTGUN;
 
 	if (ent->waterlevel >= 2)
 	{
@@ -2638,13 +2796,13 @@ void shotgun_fire (edict_t *ent)
 		if (ent->client->weaponstate == WEAPON_FIRING)
 		{
 			ent->client->weaponstate = WEAPON_READY;
-			ent->client->ps.gunframe = 33;
+			ent->client->ps.gunframe = SHOTGUN_IDLE_START;
 		}
 		return;
 	}
 
-	if (deathmatch_value)
-		damage *= 2;
+	/*if (deathmatch_value)
+		damage *= 2;*/
 
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 
@@ -2662,33 +2820,39 @@ void shotgun_fire (edict_t *ent)
 		}
 
 //GURACE_START
-		if (ent->client->pers.weapon == FindItem("SG3"))
+		if (ent->client->pers.weapon == FindItem("spas12"))
 		{
 			spreadH += 600;
 			spreadV += 600;
-			damage -= 5;
-			fire_shotgun(ent, start, forward, damage, kick, spreadH, spreadV, 30, MOD_SG3);
+			damage = 18;
+			fire_shotgun(ent, start, forward, damage, kick, spreadH, spreadV, 18, MOD_SPAS12);
+			wpFlags = MZ_GRENADE;
 		}
-		else if (ent->client->pers.weapon == FindItem("SG4"))
+		else if (ent->client->pers.weapon == FindItem("benelli"))
 		{
-			spreadH += 200;
-			spreadV += 200;
-			fire_shotgun(ent, start, forward, damage, kick, spreadH, spreadV, DEFAULT_SAWED_SHOTGUN_COUNT, MOD_SG3);
+			spreadH = 200;
+			spreadV = 200;
+			damage = 90; //single shot
+			fire_shotgun(ent, start, forward, damage, kick, spreadH, spreadV, 1, MOD_BENELLI);
+			wpFlags = MZ_RAILGUN;
 		}
 		else
-//hypov8 todo add new weps //shotguns
-//GUNRACE_END
+		{
+			damage = 20;
+			//hypov8 todo add new weps //shotguns
+			//GUNRACE_END
 			fire_shotgun(ent, start, forward, damage, kick, spreadH, spreadV, DEFAULT_SAWED_SHOTGUN_COUNT, MOD_SHOTGUN);
+		}
 	}
 
 	VectorScale (forward, -2, ent->client->kick_origin);
 	
-	// send muzzle flash
-	gi.WriteByte (svc_muzzleflash);
-	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_SHOTGUN | is_silenced);
-	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
+// send muzzle flash
+	gi.WriteByte(svc_muzzleflash);
+	gi.WriteShort(ent - g_edicts);
+	gi.WriteByte(wpFlags | is_silenced); //MZ_SHOTGUN
+	gi.multicast(ent->s.origin, MULTICAST_PVS);
 	ent->client->ps.gunframe++;
 	
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch_value ) )
@@ -2697,37 +2861,34 @@ void shotgun_fire (edict_t *ent)
 	Eject_Shotgun_Shell(ent);
 }
 
-//GURACE_START
-#define SGUNTIME0 8
-#define SGUNTIME1 11
-#define SGUNTIME2 13
-//GUNRACE_END
-
 void Weapon_Shotgun_Fire (edict_t *ent)
 {
-	if (ent->client->ps.gunframe == 6)
+	if (ent->client->ps.gunframe == SHOTGUN_SHOOT_START)
 	{
 		if (ent->client->pers.weapon_clip[ent->client->clip_index])
 			shotgun_fire (ent);
 		else
 		{
-			ent->client->ps.gunframe = 17;
+			ent->client->ps.gunframe = SHOTGUN_RELOAD_CYCLE_START;
 			ent->client->reload_weapon = true;
 			ent->client->weaponstate = WEAPON_RELOAD_CYCLE;
 		}
 	}
 //GURACE_START
-	else if (ent->client->ps.gunframe == SGUNTIME0
-		|| ent->client->ps.gunframe == SGUNTIME1
-		||ent->client->ps.gunframe == SGUNTIME2)
+	else if (ent->client->ps.gunframe == SHOTGUN_SHOOT_2ND
+		|| ent->client->ps.gunframe == SHOTGUN_SHOOT_3RD
+		||ent->client->ps.gunframe == SHOTGUN_SHOOT_4TH)
 	{
-		if (ent->client->pers.weapon == FindItem("SG4"))
+		if (ent->client->pers.weapon == FindItem("benelli"))
 			ent->client->ps.gunframe = 15;
+		else if (ent->client->pers.weapon == FindItem("spas12"))
+			ent->client->ps.gunframe += 1; //advance 1 frames
 		else
 			ent->client->ps.gunframe += 2; //advance 2 frames
+		//ent->client->ps.gunframe += 1;
 	}
 //GUNRACE_END
-	else if (ent->client->ps.gunframe == 16)
+	else if (ent->client->ps.gunframe == SHOTGUN_SHOOT_END)
 	{
 		if (!ent->client->pers.weapon_clip[ent->client->clip_index])
 		{
@@ -2749,7 +2910,7 @@ void Weapon_Shotgun_Fire (edict_t *ent)
 		}
 		else
 		{
-			ent->client->ps.gunframe = 33;
+			ent->client->ps.gunframe = SHOTGUN_IDLE_START;
 		}
 	}
 }
@@ -2758,15 +2919,15 @@ void Weapon_Shotgun (edict_t *ent)
 {
 	static int	pause_frames[]	= {0, 0};
 	//static int	fire_frames[] = { 6, 16, 0 };
-	static int	fire_frames[] = { 6, SGUNTIME0, SGUNTIME1, SGUNTIME2, 16, 0 }; //GUNRACE_ADD modded 2x
+	static int	fire_frames[] = { SHOTGUN_SHOOT_START, SHOTGUN_SHOOT_2ND, SHOTGUN_SHOOT_3RD, SHOTGUN_SHOOT_4TH, SHOTGUN_SHOOT_END, 0 }; //GUNRACE_ADD modded 2x
 	static int  kick_frames[]   = {-12, -9, -6, -4, -1};
 
-	if ((ent->client->ps.gunframe >= 6) & (ent->client->ps.gunframe <= 9))
+	if ((ent->client->ps.gunframe >= SHOTGUN_SHOOT_START) & (ent->client->ps.gunframe <= 9)) //TODO
 	{
-		ent->client->kick_angles[0] = kick_frames[ent->client->ps.gunframe-6];
+		ent->client->kick_angles[0] = kick_frames[ent->client->ps.gunframe-SHOTGUN_SHOOT_START];
 	}
 	
-	if (ent->client->ps.gunframe == 7)
+	if (ent->client->ps.gunframe == SHOTGUN_SHOOT_START)
 		ent->client->ps.rdflags |= RDF_NOLERP;
 	else
 		ent->client->ps.rdflags &= ~RDF_NOLERP;
@@ -2776,18 +2937,18 @@ void Weapon_Shotgun (edict_t *ent)
 		if (ent->client->buttons & BUTTON_ATTACK && ent->client->pers.weapon_clip[ent->client->clip_index] >= 1 && ent->client->weaponstate != WEAPON_FIRING)
 		{
 			ent->client->reload_weapon = false;
-			ent->client->ps.gunframe = 33;
+			ent->client->ps.gunframe = SHOTGUN_IDLE_START;
 			ent->client->weaponstate = WEAPON_READY;
 		}
 		else if (ent->client->newweapon)
 		{
 			ent->client->reload_weapon = false;
-			ent->client->ps.gunframe = 33;
+			ent->client->ps.gunframe = SHOTGUN_IDLE_START;
 			ent->client->weaponstate = WEAPON_DROPPING;
 		}
 		else
 		{
-			if (ent->client->ps.gunframe == 29)
+			if (ent->client->ps.gunframe == SHOTGUN_RELOAD_START)
 			{
 				if (ent->client->pers.weapon_clip[ent->client->clip_index] < MAX_SHOTGUN_ROUNDS)
 				{
@@ -2800,11 +2961,11 @@ void Weapon_Shotgun (edict_t *ent)
 						ent->client->pers.weapon_clip[ent->client->clip_index]++;
 // GUNRACE END
 						if (ent->client->pers.weapon_clip[ent->client->clip_index] < MAX_SHOTGUN_ROUNDS)
-							ent->client->ps.gunframe = 21; 
+							ent->client->ps.gunframe = SHOTGUN_RELOAD_CYCLE2_START; 
 						else
 						{
 							ent->client->reload_weapon = false;
-							ent->client->ps.gunframe = 29; 
+							ent->client->ps.gunframe = SHOTGUN_RELOAD_START; 
 							ent->client->weaponstate = WEAPON_RELOADING;
 						}
 					}
@@ -2820,13 +2981,13 @@ void Weapon_Shotgun (edict_t *ent)
 					ent->client->weaponstate = WEAPON_RELOADING;
 				}
 			}
-			else if (ent->client->ps.gunframe >= 33 && ent->client->ps.gunframe <= 40)
+			else if (ent->client->ps.gunframe >= SHOTGUN_IDLE_START && ent->client->ps.gunframe <= SHOTGUN_IDLE_END)
 			{
 				if (ent->client->pers.weapon_clip[ent->client->clip_index] < MAX_SHOTGUN_ROUNDS &&
 					ent->client->pers.inventory[ent->client->ammo_index])
 				{
 					ent->client->weaponstate = WEAPON_RELOAD_CYCLE;
-					ent->client->ps.gunframe = 17;
+					ent->client->ps.gunframe = SHOTGUN_RELOAD_CYCLE_START;
 				}
 			}
 		}
@@ -2836,7 +2997,7 @@ void Weapon_Shotgun (edict_t *ent)
 	{
 		ent->client->reload_weapon = true;
 		ent->client->weaponstate = WEAPON_RELOAD_CYCLE;
-		ent->client->ps.gunframe = 17;
+		ent->client->ps.gunframe = SHOTGUN_RELOAD_CYCLE_START;
 		
 		if (!ent->client->pers.inventory[ent->client->ammo_index])
 		{
@@ -2847,24 +3008,23 @@ void Weapon_Shotgun (edict_t *ent)
 			}
 			NoAmmoWeaponChange (ent);
 			ent->client->reload_weapon = false;
-			ent->client->ps.gunframe = 33;
+			ent->client->ps.gunframe = SHOTGUN_IDLE_START;
 			ent->client->weaponstate = WEAPON_READY;
 		}
 	}
 	
-	if (ent->client->ps.gunframe == 21)
+	if (ent->client->ps.gunframe == SHOTGUN_RELOAD_CYCLE2_START)
 	{
 		gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/shotgun/shotgload.wav"), 1, ATTN_NORM, 0);
 	}
 
-	Weapon_Generic (ent, 5, 32, 40, 45, pause_frames, fire_frames, Weapon_Shotgun_Fire);
+	Weapon_Generic (ent, SHOTGUN_RAISE_END, SHOTGUN_RELOAD_END , SHOTGUN_IDLE_END, SHOTGUN_LOWER_END, pause_frames, fire_frames, Weapon_Shotgun_Fire);
+	ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0; //hypov8 unhide
 
 	/*
 	if (ent->client->ps.gunframe == 1)
 	{
-		ent->client->ps.model_parts[PART_HEAD].invisible_objects = 0;
-		ent->client->ps.model_parts[PART_BODY].invisible_objects = 0;
-		ent->client->ps.model_parts[PART_LEGS].invisible_objects = 0;
+		ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0;
 	}
 	*/
 
@@ -2908,21 +3068,32 @@ void weapon_barmachinegun_fire (edict_t *ent)
 	}
 
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
-	VectorScale (forward, -3, ent->client->kick_origin);
-	ent->client->kick_angles[0] = -3;
+	VectorScale (forward, -2, ent->client->kick_origin);
+	ent->client->kick_angles[0] = -2;
 	VectorSet(offset, 0, 0,  ent->viewheight-1);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
 	fire_bullet (ent, start, forward, damage, kick, 0, 0, MOD_BARMACHINEGUN);
 
 	// send muzzle flash
+#if 1 //GUNRACE_START
+	if (ent->client->ps.gunframe == 5)
+	{
+		gi.WriteByte (svc_muzzleflash);
+		gi.WriteShort (ent-g_edicts);
+		gi.WriteByte(MZ_BARMACHINEGUN | is_silenced);
+		gi.multicast(ent->s.origin, MULTICAST_PVS);
+	}
+#else //GUNRACE_END
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
 	if (ent->client->ps.gunframe == 5)
-		gi.WriteByte (MZ_BARMACHINEGUN | is_silenced);
+		gi.WriteByte(MZ_BARMACHINEGUN | is_silenced);
 	else
 		gi.WriteByte (MZ_BARMACHINEGUN2 | is_silenced);
-	gi.multicast (ent->s.origin, MULTICAST_PVS);
+
+	gi.multicast(ent->s.origin, MULTICAST_PVS);
+#endif
 
 	if (! ( (int)dmflags->value & DF_INFINITE_AMMO && deathmatch_value ) )
 	{
@@ -2947,12 +3118,12 @@ void barmachinegun_fire (edict_t *ent)
 {
 
 
-	if ((ent->client->ps.gunframe == 19)/*  && !(ent->client->buttons & BUTTON_ATTACK)*/)
+	if ((ent->client->ps.gunframe == 13) /*was 19*//*  && !(ent->client->buttons & BUTTON_ATTACK)*/)
 	{
 		ent->client->ps.gunframe = 43;
 		return;
 	}
-	else if (ent->client->ps.gunframe == 12)
+	else if (ent->client->ps.gunframe == 11) //was 12
 	{
 		if (ent->client->pers.pistol_mods & WEAPON_MOD_ROF /*WEAPON_MOD_COOLING_JACKET*/) //GUNRACE_ADD
 		{
@@ -2992,7 +3163,8 @@ void barmachinegun_fire (edict_t *ent)
 void Weapon_Barmachinegun (edict_t *ent)
 {
 	static int	pause_frames[]	= {0, 0};
-	static int	fire_frames[]	= {5, 6, 7, 8, 9, 12, 19, 0};
+	//static int	fire_frames[]	= {5, 6, 7, 8, 9, 12, 19, 0};
+	static int	fire_frames[]	= {5, 6, 7, 8, 9, 11, 13, 0};
 	int			rounds;
 	
 	if (ent->client->pers.inventory[ent->client->ammo_index] == 0 && ent->client->pers.weapon_clip[ent->client->clip_index] == 0
@@ -3054,7 +3226,8 @@ void Weapon_Barmachinegun (edict_t *ent)
 
 	
 	Weapon_Generic (ent, 4, 42, 53, 59, pause_frames, fire_frames, barmachinegun_fire);
-
+	ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0; //hypov8 unhide
+	ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = 0; //hypov8 unhide
  	// gi.dprintf ("Frame: %d\n", ent->client->ps.gunframe);
 }
 
@@ -3260,13 +3433,14 @@ void Weapon_GrenadeLauncher (edict_t *ent)
 	}
 
 	Weapon_Generic (ent, 4, 32, 40, 45, pause_frames, fire_frames, Weapon_GrenadeLauncher_Fire);
+	ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0; //hypov8 unhide
 
 	if (ent->client->ps.gunframe >= 17 && ent->client->ps.gunframe <= 32)
 	{
-		ent->client->ps.model_parts[PART_GUN].invisible_objects = 0;
+		ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = 0;
 	}
 	else
-		ent->client->ps.model_parts[PART_GUN].invisible_objects = (1<<0 | 1<<1);
+		ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = (1<<0 | 1<<1);
 
 	
 	if (ent->client->ps.gunframe >= 9 && ent->client->ps.gunframe <= 16)
@@ -3427,17 +3601,16 @@ void Weapon_RocketLauncher (edict_t *ent)
 	}
 	
 	Weapon_Generic (ent, 5, 29, 41, 47, pause_frames, fire_frames, Weapon_RocketLauncher_Fire);
+	ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0; //hypov8 unhide
+	ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = 0; //hypov8 unhide
 
-	/*
+	//remove shell
 	if (ent->client->ps.gunframe >= 14 && ent->client->ps.gunframe <= 29)
 	{
-		ent->client->ps.model_parts[PART_GUN].invisible_objects = 0;
+		ent->client->ps.model_parts[PART_GUN_MISC].invisible_objects = 0;
 	}
 	else
-		ent->client->ps.model_parts[PART_GUN].invisible_objects = (1<<0 | 1<<1);
-	*/
-
-
+		ent->client->ps.model_parts[PART_GUN_MISC].invisible_objects = (1<<0 | 1<<1);
 
 	// gi.dprintf ("frame: %d\n", ent->client->ps.gunframe);
 }
@@ -3500,11 +3673,8 @@ void Machete_Hit(edict_t *ent, vec3_t vorigin, int damage)
 
 void Weapon_Machete_Hit(edict_t *ent)
 {
-#if HYPODEBUG
-	int		damage = 1;
-#else
 	int		damage = 80;
-#endif
+
 	Machete_Hit(ent, vec3_origin, damage);
 	ent->client->ps.gunframe++;
 }
@@ -3522,26 +3692,27 @@ void Weapon_Machete(edict_t *ent)
 
 	Weapon_Generic(ent, raiseBJ1, reloadBJ1, idleBJ1, lowerBJ1, pause_frames, fire_frames, Weapon_Machete_Hit);
 
-	ent->client->ps.model_parts[PART_BODY].invisible_objects = 0;
+	ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0;
 
 }
 
 
 // add hypov8
 // pistol animation frames
-#define raiseGun1 5
+#define PISTOL_RAISE_END 5
 
-#define shootGun0 6
-#define shootGun1 13
+#define PISTOL_SHOOT_START 6
+#define PISTOL_SHOOT_2ND 10
+#define PISTOL_SHOOT_END 13
 
-#define reloadGun0 14
-#define reloadGun1 32
+#define PISTOL_RELOAD_START 14
+#define PISTOL_RELOAD_END 32
 
-#define idleGun0 33
-#define idleGun1 35
+#define PISTOL_IDLE_START 33
+#define PISTOL_IDLE_END 35
 
-#define lowerGun0 36
-#define lowerGun1 39
+#define PISTOL_LOWER_START 36
+#define PISTOL_LOWER_END 39
 
 //hypo hmg last shoot frame, fix bullet count issue
 //#define lowerHMG1 19
@@ -3557,7 +3728,7 @@ void Weapon_Pistol_Fire_Duel(edict_t *ent)
 		if (ent->client->weaponstate == WEAPON_FIRING)
 		{
 			ent->client->weaponstate = WEAPON_READY;
-			ent->client->ps.gunframe = idleGun0; // hypo was 29
+			ent->client->ps.gunframe = PISTOL_IDLE_START; // hypo was 29
 		}
 		return;
 	}
@@ -3574,7 +3745,7 @@ void Weapon_Pistol_Fire_Duel(edict_t *ent)
 	}
 	else
 #endif
-		if (ent->client->ps.gunframe == shootGun0 || ent->client->ps.gunframe == shootGun0 + 5) //hypov8 fire 2 shots like hmg
+		if (ent->client->ps.gunframe == PISTOL_SHOOT_START || ent->client->ps.gunframe == PISTOL_SHOOT_2ND /*5*/) //hypov8 fire 2 shots like hmg
 		{
 			if (ent->client->pers.pistol_mods & WEAPON_MOD_ROF)
 			{
@@ -3608,7 +3779,7 @@ void Weapon_Pistol_Fire_Duel(edict_t *ent)
 			Pistol_Fire(ent, vec3_origin, damage);
 			Eject_Pistol_Shell(ent);
 		}
-		else if (ent->client->ps.gunframe == reloadGun0) // hypo was 10
+		else if (ent->client->ps.gunframe == PISTOL_SHOOT_END)
 		{
 			if (!ent->client->pers.weapon_clip[ent->client->clip_index])
 			{
@@ -3639,7 +3810,7 @@ void Weapon_Pistol_Fire_Duel(edict_t *ent)
 				}
 			}
 			else
-				ent->client->ps.gunframe = idleGun0; // hypo was 29
+				ent->client->ps.gunframe = PISTOL_IDLE_START; // hypo was 29
 		}
 
 }
@@ -3648,15 +3819,15 @@ void Weapon_Pistol_Duel(edict_t *ent)
 {
 	int		rounds;
 	static int	pause_frames[] = { 0, 0, 0 };
-	static int	fire_frames[] = { shootGun0, shootGun0 + 5, shootGun1 + 1, 0 };
+	static int	fire_frames[] = { PISTOL_SHOOT_START, PISTOL_SHOOT_2ND, PISTOL_SHOOT_END, 0 };
 
 	if (ent->client->reload_weapon) //reload pressed
 	{
-		if (ent->client->ps.gunframe >= reloadGun1 && ent->client->ps.gunframe <= idleGun1) //finished reload or idle
+		if (ent->client->ps.gunframe >= PISTOL_RELOAD_END && ent->client->ps.gunframe <= PISTOL_IDLE_END) //finished reload or idle
 		{
 			if (ent->client->pers.weapon_clip[ent->client->clip_index] < MAX_PISTOL_ROUNDS) //ammo not full
 			{
-				ent->client->ps.gunframe = reloadGun0;
+				ent->client->ps.gunframe = PISTOL_RELOAD_START;
 				ent->client->weaponstate = WEAPON_RELOADING;
 
 				ent->client->pers.inventory[ent->client->ammo_index] += ent->client->pers.weapon_clip[ent->client->clip_index];
@@ -3679,10 +3850,10 @@ void Weapon_Pistol_Duel(edict_t *ent)
 	}
 	else if (ent->client->pers.weapon_clip[ent->client->clip_index]<= 1 && ent->client->pers.inventory[ent->client->ammo_index]) //gun empty but have ammo
 	{
-		if (ent->client->ps.gunframe >= reloadGun1 && ent->client->ps.gunframe <= idleGun1) //finished reload or idle
+		if (ent->client->ps.gunframe >= PISTOL_RELOAD_END && ent->client->ps.gunframe <= PISTOL_LOWER_START) //finished reload or idle
 		{
 			ent->client->reload_weapon = false;
-			ent->client->ps.gunframe = reloadGun0; // hypo was 10
+			ent->client->ps.gunframe = PISTOL_RELOAD_START; // hypo was 10
 			ent->client->weaponstate = WEAPON_RELOADING;
 
 			if (ent->client->pers.inventory[ent->client->ammo_index] < MAX_PISTOL_ROUNDS)
@@ -3697,40 +3868,38 @@ void Weapon_Pistol_Duel(edict_t *ent)
 		}
 	}
 
-	if (ent->client->pers.pistol_mods & WEAPON_MOD_DAMAGE)
+	if (ent->client->pers.pistol_mods & WEAPON_MOD_DAMAGE){
 		ent->client->ps.gunindex = gi.modelindex("models/weapons/v_colt/magnum.mdx");
+		ent->client->ps.model_parts[PART_GUN_MISC].modelindex = gi.modelindex("models/weapons/v_colt/magnum_l.mdx"); //shouldent happen!!
+	}
 
 	//            *ent, FRAME_ACTIVATE_LAST, FRAME_RELOAD_LAST, FRAME_IDLE_LAST, FRAME_DEACTIVATE_LAST,
-	Weapon_Generic(ent, raiseGun1, reloadGun1, idleGun1, lowerGun1, pause_frames, fire_frames, Weapon_Pistol_Fire_Duel);
+	Weapon_Generic(ent, PISTOL_RAISE_END, PISTOL_RELOAD_END, PISTOL_IDLE_END, PISTOL_LOWER_END, pause_frames, fire_frames, Weapon_Pistol_Fire_Duel);
+	ent->client->ps.model_parts[PART_GUN_R_HAND].invisible_objects = 0; //hypov8 unhide
+	ent->client->ps.model_parts[PART_GUN_MISC].invisible_objects = 0; //hypov8 unhide
 
 	if (ent->client->pers.pistol_mods & WEAPON_MOD_RELOAD)
 	{
-		if (ent->client->ps.gunframe == reloadGun0 + 11) //skipp a few frames for reload
-			ent->client->ps.gunframe = reloadGun0 + 17;
+		if (ent->client->ps.gunframe == PISTOL_RELOAD_START + 11) //skipp a few frames for reload
+			ent->client->ps.gunframe = PISTOL_RELOAD_START + 17;
 	}
 
-	if (ent->client->ps.gunframe >= reloadGun0 && ent->client->ps.gunframe <= reloadGun1)  //reload
-	{
-		ent->client->ps.model_parts[PART_BODY].invisible_objects = 0;
-	}
-	else
-		ent->client->ps.model_parts[PART_BODY].invisible_objects = (1 << 0 | 1 << 1);
 
 	if (ent->client->ps.gunframe == 1)
 		gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/pistol/holster.wav"), 1, ATTN_NORM, 0);
 
-	if (ent->client->ps.gunframe == reloadGun0 + 1)
+	if (ent->client->ps.gunframe == PISTOL_RELOAD_START + 1)
 		gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/pistol/clip_out.wav"), 1, ATTN_NORM, 0);
 
-	if (ent->client->ps.gunframe == reloadGun0 + 8)
+	if (ent->client->ps.gunframe == PISTOL_RELOAD_START + 8)
 		gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/pistol/clip_in.wav"), 1, ATTN_NORM, 0);
 
-	if (ent->client->ps.gunframe >= reloadGun0 && ent->client->ps.gunframe <= (reloadGun1 - 4))
+	if (ent->client->ps.gunframe >= PISTOL_RELOAD_START && ent->client->ps.gunframe <= (PISTOL_RELOAD_END - 4))
 	{
-		ent->client->ps.model_parts[PART_GUN].invisible_objects = 0;
+		ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = 0;
 	}
 	else
-		ent->client->ps.model_parts[PART_GUN].invisible_objects = (1 << 0 | 1 << 1);
+		ent->client->ps.model_parts[PART_GUN_CLIP].invisible_objects = (1 << 0 | 1 << 1);
 
 }
 
@@ -3766,7 +3935,7 @@ void M41a_Fire(edict_t *ent)
 
 	if (ent->client->pers.inventory[ent->client->ammo_index] == 0 && ent->client->pers.weapon_clip[ent->client->clip_index] == 0)
 		return;
-
+#if 0
 	if (ent->client->ps.gunframe == 4)
 		ent->client->ps.gunframe = 5; //hypo 3 frames
 	else
@@ -3776,7 +3945,12 @@ void M41a_Fire(edict_t *ent)
 			ent->client->ps.gunframe = 4;
 		return; //do nothing
 	}
+#else
+	ent->client->ps.gunframe++;
+	if (ent->client->ps.gunframe == 6)
+		ent->client->ps.gunframe = 4; //hypo 3 fram
 
+#endif
 
 	// Tommy is too powerful in real-mode
 	if (dm_realmode->value)
@@ -3893,6 +4067,8 @@ void Weapon_M41a(edict_t *ent)
 	}
 
 	Weapon_Generic(ent, 3, 29, 40, 46, pause_frames, fire_frames, M41a_Fire);
+	ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0; //hypov8 unhide
+	ent->client->ps.model_parts[PART_GUN_R_HAND].invisible_objects = 0; //hypov8 unhide
 }
 
 /*
@@ -4053,7 +4229,7 @@ void Weapon_Uzi(edict_t *ent)
 
 				ent->client->pers.weapon_clip[ent->client->clip_index] = rounds;
 				ent->client->pers.inventory[ent->client->ammo_index] -= rounds;
-				gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/machinegun/machgcock.wav"), 1, ATTN_NORM, 0);
+				//gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/machinegun/machgcock.wav"), 1, ATTN_NORM, 0);
 			}
 
 			ent->client->reload_weapon = false;
@@ -4061,6 +4237,7 @@ void Weapon_Uzi(edict_t *ent)
 	}
 	else if (ent->client->pers.weapon_clip[ent->client->clip_index] <= 1 /*&& ent->client->pers.inventory[ent->client->ammo_index] >= 2*/)
 	{
+		//uzi reload
 		if (ent->client->ps.gunframe >= idleUzi_0 && ent->client->ps.gunframe <= idleUzi_1) //40
 		{
 			ent->client->reload_weapon = false;
@@ -4076,11 +4253,18 @@ void Weapon_Uzi(edict_t *ent)
 
 			ent->client->pers.weapon_clip[ent->client->clip_index] = rounds;
 			ent->client->pers.inventory[ent->client->ammo_index] -= rounds;
-			gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/machinegun/machgcock.wav"), 1, ATTN_NORM, 0);
+			//gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/machinegun/machgcock.wav"), 1, ATTN_NORM, 0);		
 		}
 	}
 
 	Weapon_Generic(ent, raiseUzi_1, reloadUzi_1, idleUzi_1, lowerUzi_1, pause_frames, fire_frames, Uzi_Fire);
+
+	if (ent->client->ps.gunframe == 11)
+		gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/pistol/clip_out.wav"), 1, ATTN_NORM, 0);
+
+	if (ent->client->ps.gunframe == 18)
+		gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/pistol/clip_in.wav"), 1, ATTN_NORM, 0);
+
 }
 
 
@@ -4297,7 +4481,6 @@ void Weapon_SuperShotgun(edict_t *ent)
 		gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/shotgun/shotgload.wav"), 1, ATTN_NORM, 0);
 	}
 
-
 	Weapon_Generic(ent, raiseSSGun1, reloadSSGun1, idleSSGun1, lowerSSGun1, pause_frames, fire_frames, Weapon_SuperShotgun_Fire);
 
 }
@@ -4309,27 +4492,29 @@ M60
 ===============
 /* hypov8 v_m60.mdx
 0-4 raise
-5-6 attack
-7-30 reload
-31-45 idle
-46-50 lower
+5-8 attack
+9-41 reload
+42-44 idle
+45-50 lower
 */
 #define raiseM60_1 4
 //shoot
-#define shootM60_0 5 //6
-#define shootM60_1 6
+#define shootM60_0 5 //shoot start
+#define shootM60_1 6 //shoot mid
+#define shootM60_2 7 //shoot mid
+#define shootM60_3 8 //shoot end
 //reload
-#define reloadM60_0 8 //hypov8 7 has some bullets delete?
-#define reloadM60_1 30
+#define reloadM60_0 9 //hypov8 7 has some bullets delete?
+#define reloadM60_1 41 //30
 //idle
-#define idleM60_0 31
-#define idleM60_1 45
+#define idleM60_0 42 //31
+#define idleM60_1 44 //45
 //put weapon away
-#define lowerM60_0 46 //hypov8 ToDo animation
+#define lowerM60_0 45 //hypov8 ToDo animation
 #define lowerM60_1 50
 
 
-void M60_fire(edict_t *ent)
+void Weapon_M60_fire(edict_t *ent)
 {
 	int	i;
 	vec3_t		start;
@@ -4362,10 +4547,11 @@ void M60_fire(edict_t *ent)
 	if (ent->client->pers.inventory[ent->client->ammo_index] == 0 && ent->client->pers.weapon_clip[ent->client->clip_index] == 0)
 		return;
 
-	if (ent->client->ps.gunframe == shootM60_1)
+	if (ent->client->ps.gunframe == shootM60_3)
 		ent->client->ps.gunframe = shootM60_0; //shoot
 	else
-		ent->client->ps.gunframe = shootM60_1;
+		ent->client->ps.gunframe++;
+		//ent->client->ps.gunframe = shootM60_1;
 
 
 	// Bounce
@@ -4425,7 +4611,7 @@ void M60_fire(edict_t *ent)
 void Weapon_M60(edict_t *ent)
 {
 	static int	pause_frames[] = { 0, 0 };
-	static int	fire_frames[] = { shootM60_0, shootM60_0 + 1, shootM60_0 + 2, 0 };
+	static int	fire_frames[] = { shootM60_0, shootM60_1, shootM60_2, shootM60_3, 0 };
 	int			rounds;
 
 	if (ent->client->pers.inventory[ent->client->ammo_index] == 0 && ent->client->pers.weapon_clip[ent->client->clip_index] == 0
@@ -4458,7 +4644,7 @@ void Weapon_M60(edict_t *ent)
 
 				ent->client->pers.weapon_clip[ent->client->clip_index] = rounds;
 				ent->client->pers.inventory[ent->client->ammo_index] -= rounds;
-				gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/m60_cock.wav"), 1, ATTN_NORM, 0);
+				gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/m60/cock.wav"), 1, ATTN_NORM, 0);
 			}
 
 			ent->client->reload_weapon = false;
@@ -4481,11 +4667,13 @@ void Weapon_M60(edict_t *ent)
 
 			ent->client->pers.weapon_clip[ent->client->clip_index] = rounds;
 			ent->client->pers.inventory[ent->client->ammo_index] -= rounds;
-			gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/m60_cock.wav"), 1, ATTN_NORM, 0);
+			gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/m60/cock.wav"), 1, ATTN_NORM, 0);
 		}
 	}
 
-	Weapon_Generic(ent, raiseM60_1, reloadM60_1, idleM60_1, lowerM60_1, pause_frames, fire_frames, M60_fire);
+	Weapon_Generic(ent, raiseM60_1, reloadM60_1, idleM60_1, lowerM60_1, pause_frames, fire_frames, Weapon_M60_fire);
+	ent->client->ps.model_parts[PART_GUN_L_HAND].invisible_objects = 0; //hypov8 unhide
+	ent->client->ps.model_parts[PART_GUN_FINGERS].invisible_objects = 0; //hypov8 unhide
 }
 
 

@@ -399,6 +399,15 @@ static void ACESP_ClientConnect(edict_t *ent, char *userinfo)
 	ent->client->pers.lastpacket = curtime;
 	level.lastactive = level.framenum;
 	ent->client->showscores = NO_SCOREBOARD;
+
+// ACEBOT_ADD
+	if (ent->acebot.is_bot)
+	{
+		ent->client->pers.is_bot = true;  //fix CNCT issue
+		ent->client->pers.spectator = PLAYING;
+	}
+// ACEBOT_END
+
 }
 
 
@@ -410,8 +419,6 @@ static void ACESP_ClientConnect(edict_t *ent, char *userinfo)
 ///////////////////////////////////////////////////////////////////////
 void ACESP_PutClientInServer (edict_t *bot, int team)
 {
-
-
 #if 1
 	PutClientInServer(bot, true, team);
 #else
@@ -971,7 +978,7 @@ void ACESP_SetName(edict_t *bot, char *name, char *skin)
 ///////////////////////////////////////////////////////////////////////
 // Spawn the bot
 ///////////////////////////////////////////////////////////////////////
-void ACESP_SpawnBot (char *team, char *name, char *skin, char *userinfo)
+void ACESP_SpawnBot (char *name, char *skin, char *team, char *userinfo)
 {
 	edict_t	*bot;
 
@@ -1060,6 +1067,9 @@ void ACESP_RemoveBot(char *name, qboolean saveBotFile)
 				//ACEIT_PlayerRemoved (bot);
 				safe_bprintf (PRINT_MEDIUM, "%s removed\n", bot->client->pers.netname);
 
+				if (game.clients[i-1].pers.is_bot) //fix CNCT issue
+					memset(&game.clients[i-1], 0, sizeof(gclient_t)) ;
+
 				if (strcmp(name, "single") == 0) //hypov8 remove 1 bot then exit
 					break;
 			}
@@ -1074,3 +1084,14 @@ void ACESP_RemoveBot(char *name, qboolean saveBotFile)
 		ACESP_SaveBots(); // Save them again
 }
 
+//fix for using console to change map
+void ACESP_FreeBots(void)
+{
+	int		i;
+
+	for (i = 0; i < game.maxclients; i++)
+	{
+		if (game.clients[i].pers.is_bot) //fix CNCT issue
+			memset(&game.clients[i], 0, sizeof(gclient_t)) ;
+	}
+}
