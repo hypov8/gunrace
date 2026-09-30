@@ -114,9 +114,10 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 	if (gr_isLastWep(self->client))
 		return; //hypov8 shotty? multiple kill
 //GUNRACE_END
-
+// ACEBOT_ADD
 	if (self->acebot.is_bot)
 		ACEMV_Attack_CalcRandDir(self, aimdir);
+// ACEBOT_END
 
 	self->client->resp.accshot++;
 	hit = 0;

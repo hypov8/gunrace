@@ -1036,7 +1036,7 @@ void ACEMV_Attack (edict_t *self, usercmd_t *ucmd)
 
 //GUNRACE_START
 	//make player run forward to enemy
-	if (self->client->resp.curwepIndex == GR_WEPS - 1 /*!Q_stricmp(self->client->resp.curweap, GR_FINAL_WEP)*/)
+	if (self->client->resp.curwepIndex == GR_WEP_MACHETE /*!Q_stricmp(self->client->resp.curweap, GR_FINAL_WEP)*/)
 	{
 		ucmd->sidemove = 0;
 		ucmd->forwardmove = BOT_FORWARD_VEL;
@@ -1198,7 +1198,7 @@ void ACEMV_Attack (edict_t *self, usercmd_t *ucmd)
 		{
 			//hypov8 todo: PM_Friction. PM_Accelerate. fix slight aim errors
 			//GUNRACE_START
-			if (self->client->resp.curwepIndex == GR_WEPS - 1)
+			if (self->client->resp.curwepIndex == GR_WEP_MACHETE)
 			{
 				fwd =0.0f;
 				side = 0.0f; //10 fps

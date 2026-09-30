@@ -104,8 +104,7 @@ void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, 
 void AngleVectors (vec3_t angles, vec3_t forward, vec3_t right, vec3_t up)
 {
 	float		angle;
-	static float		sr, sp, sy, cr, cp, cy;
-	// static to help MS compiler fp bugs
+	float		sr, sp, sy, cr, cp, cy;
 
 	angle = angles[YAW] * (M_PI*2 / 360);
 	sy = sin(angle);
@@ -321,10 +320,6 @@ float	anglemod(float a)
 	a = (360.0/65536) * ((int)(a*(65536/360.0)) & 65535);
 	return a;
 }
-
-	int		i;
-	vec3_t	corners[2];
-
 
 // this is the slow, general version
 int BoxOnPlaneSide2 (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
@@ -706,7 +701,7 @@ vec_t VectorNormalize (vec3_t v)
 
 	if (length)
 	{
-		length = sqrt (length);		// FIXME
+		length = sqrt (length);
 		ilength = 1/length;
 		v[0] *= ilength;
 		v[1] *= ilength;
@@ -725,7 +720,7 @@ vec_t VectorNormalize2 (vec3_t v, vec3_t out)
 
 	if (length)
 	{
-		length = sqrt (length);		// FIXME
+		length = sqrt (length);
 		ilength = 1/length;
 		out[0] = v[0]*ilength;
 		out[1] = v[1]*ilength;
@@ -1145,12 +1140,8 @@ skipwhite:
 		while (1)
 		{
 			c = *data++;
-			if (c=='\"' || !c)
-			{
-				com_token[len] = 0;
-				*data_p = data;
-				return com_token;
-			}
+			if (c == '\"' || !c)
+				goto done;
 			if (len < MAX_TOKEN_CHARS)
 			{
 				com_token[len] = c;
@@ -1171,6 +1162,7 @@ skipwhite:
 		c = *data;
 	} while (c>32);
 
+done:
 	if (len == MAX_TOKEN_CHARS)
 	{
 //		Com_Printf ("Token exceeded %i chars, discarded.\n", MAX_TOKEN_CHARS);
@@ -1349,6 +1341,7 @@ void Com_sprintf (char *dest, int size, char *fmt, ...)
 // Ridah, portable strlwr()
 char *kp_strlwr( char *name )
 {
+	int i;
 	for (i=0; name[i]; i++)
 		if (name[i] >= 'A' && name[i] <= 'Z')
 			name[i] -= 'A' - 'a';
@@ -1453,7 +1446,7 @@ void Info_RemoveKey (char *s, char *key)
 
 		if (!strcmp (key, pkey) )
 		{
-			strcpy (start, s);	// remove this part
+			memmove (start, s, strlen(s) + 1);	// remove this part
 			return;
 		}
 

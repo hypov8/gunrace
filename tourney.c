@@ -62,7 +62,7 @@ edict_t *GetAdmin()
 	int		i;
 	edict_t	*doot;
 
-	for_each_player_not_bot(doot, i)
+	for_each_player_not_bot(doot, i) // ACEBOT_ADD
 	{
 		if (doot->client->pers.admin > NOT_ADMIN)
 			return doot;
@@ -89,7 +89,7 @@ void MatchSetup () // Places the server in prematch mode
 	level.modeset = MATCHSETUP;
 	level.startframe = level.framenum;
 
-	for_each_player_not_bot(self, i)
+	for_each_player_not_bot(self, i) // ACEBOT_ADD
 	{
 		self->client->showscores = SCOREBOARD;
 		self->client->resp.scoreboard_frame = 0;
@@ -259,7 +259,7 @@ void Start_Match () // Starts the match
 	level.startframe = level.framenum;
 	level.is_spawn = false;
 	level.is_spawn_bot = false; // ACEBOT_ADD
-	for_each_player_not_bot(self, i)
+	for_each_player_not_bot(self, i) // ACEBOT_ADD
 	{
 		safe_centerprintf(self, "The match has begun!");
 		self->client->resp.is_spawn = false;
@@ -280,7 +280,7 @@ void Start_Pub () // Starts a public game
 	level.startframe = level.framenum;
 	level.is_spawn = false;
 	level.is_spawn_bot = false; // ACEBOT_ADD
-	for_each_player_not_bot(self, i)
+	for_each_player_not_bot(self, i) // ACEBOT_ADD
 	{
 		safe_centerprintf(self, "Let the fun begin!");
 		self->client->resp.is_spawn = false;		
@@ -380,7 +380,7 @@ void CheckIdleMatchSetup () // restart the server if its empty in matchsetup mod
 	int		i;
 	edict_t	*doot;
 
-	for_each_player_not_bot(doot, i)
+	for_each_player_not_bot(doot, i) // ACEBOT_ADD
 		count++;
 	if (count == 0)
 		ResetServer (false);
@@ -501,7 +501,7 @@ void CheckEndVoteTime () // check the timelimit for voting next level/start next
 	char	command[64];
 
 	memset (&votes, 0, sizeof(votes));
-	for_each_player_not_bot(player, i)
+	for_each_player_not_bot(player, i) // ACEBOT_ADD
 	{
 		count++;
 		votes[player->client->mapvote]++;

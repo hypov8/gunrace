@@ -83,7 +83,7 @@ void ACECM_LevelBegin(void)
 		int		i;
 		edict_t	*doot;
 
-		for_each_player_not_bot(doot, i)
+		for_each_player_not_bot(doot, i) // ACEBOT_ADD
 			count++;
 
 		if (count)
@@ -369,7 +369,7 @@ static void ACESP_ClientConnect(edict_t *ent, char *userinfo)
 	ent->flags = 0;
 
 	// they can connect
-	ent->client = game.clients + (ent - g_edicts - 1);
+	ent->client = game.clients + ( ent - g_edicts - 1 );
 
 	// clear the respawning variables
 	InitClientResp(ent->client);
@@ -392,8 +392,10 @@ static void ACESP_ClientConnect(edict_t *ent, char *userinfo)
 	//dont send joined info if they are bots connecting
 	gi.dprintf("ACE: bot (%s) connected\n", ent->client->pers.netname);
 
-	for_each_player_not_bot(doot, j)
+	for_each_player_not_bot(doot, j) // ACEBOT_ADD
+	{
 		safe_cprintf(doot, PRINT_CHAT, "%s connected from %s\n", ent->client->pers.netname, ent->client->pers.country);
+	}
 #endif
 	
 	ent->client->pers.lastpacket = curtime;
@@ -965,8 +967,11 @@ void ACESP_SetName(edict_t *bot, char *name, char *skin)
 		// send joined info if bot was added during gameplay
 		gi.dprintf("ACE: bot (%s) connected\n", bot_name);
 
-		for_each_player_not_bot(doot, j)
+		for_each_player_not_bot(doot, j) // ACEBOT_ADD
+		{
 			safe_cprintf(doot, PRINT_CHAT, "%s connected from %s\n", bot_name, bot->client->pers.country);
+
+		}
 	}
 #endif
 

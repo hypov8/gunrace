@@ -267,7 +267,7 @@ void InitGame (void)
 	dmflags = gi.cvar ("dmflags", "0", CVAR_SERVERINFO|CVAR_ARCHIVE);
 	fraglimit = gi.cvar("fraglimit", "0", CVAR_LATCH|CVAR_SERVERINFO);
 //GUNRACE_START
-	fraglimit =	gi.cvar_set("fraglimit", va("%d", killcount[GR_WEPS - 1]));
+	fraglimit =	gi.cvar_set("fraglimit", va("%d", killcount[GR_WEP_MACHETE]));
 	fraglimit = gi.cvar("fraglimit", "0", CVAR_NOSET); //fixed
 //GUNRACE_END
 
@@ -379,7 +379,7 @@ void InitGame (void)
 
 	i = proccess_ini_file();
 	if (i != OK)
-		gi.dprintf("Error opening comp ini file\n");
+		gi.dprintf("Error opening gunrace ini file\n"); //GUNRACE_CHANGE
 	else
 		gi.dprintf("Processed gunrace.ini file\n"); //GUNRACE_CHANGE
 

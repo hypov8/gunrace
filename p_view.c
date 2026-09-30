@@ -1049,7 +1049,7 @@ void G_SetClientFrame (edict_t *ent)
 
 	client = ent->client;
 
-	if (client->pers.spectator == SPECTATING)//add hypov8
+	if (client->pers.spectator == SPECTATING)//add hypov8. stops stupid effects
 		return;
 
 	if (client->ps.pmove.pm_flags & PMF_DUCKED)

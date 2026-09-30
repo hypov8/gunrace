@@ -115,9 +115,9 @@ grWeps_t grWeps[GR_WEPS + 1];
 static void gr_BuildGunRotationString(void)
 {
 	int i, j, k;
-	int tmpUsed[GR_WEPS - 1];
+	int tmpUsed[GR_WEP_MACHETE];
 	int wepOrder = (int)weaponorder->value;
-	int gunCount = GR_WEPS - 1;
+	int gunCount = GR_WEP_MACHETE;
 
 	//copy gun order default
 	memcpy(grWeps, grWepsOrig, sizeof(grWepsOrig));
@@ -225,14 +225,14 @@ void SetupGunrace(void) //add hypov8
 	killcount[0] = frags;
 	for (i = 1; i < GR_WEPS; i++)
 	{
-		if (i == GR_WEPS - 1)
-			killcount[GR_WEPS-1] = killcount[i - 1] + 1;
+		if (i == GR_WEP_MACHETE)
+			killcount[GR_WEP_MACHETE] = killcount[i - 1] + 1;
 		else
 			killcount[i] = frags + killcount[i-1];
 	}
 
 	//hypov8 force setting fraglimit, incase its used in code at any time
-	fraglimit = gi.cvar_forceset("fraglimit", va("%d", killcount[GR_WEPS - 1]));
+	fraglimit = gi.cvar_forceset("fraglimit", va("%d", killcount[GR_WEP_MACHETE]));
 }
 
 static void gr_Prints(edict_t *ent, qboolean finalWep, int newWep)
@@ -275,7 +275,7 @@ void gr_fillWeaponClip(gclient_t	*client)
 		return;
 
 	//	dont use ammo on Machete
-	if (client->resp.curwepIndex != GR_WEPS-1)
+	if (client->resp.curwepIndex != GR_WEP_MACHETE)
 	{
 		for (i = 0; i < GR_WEPS; i++)
 		{
@@ -325,7 +325,7 @@ static void gr_ChangeClientWeapon(edict_t *ent, int Oldweapon)
 	client->pickup_msg_time = level.time + 5.5;
 
 	//	dont use ammo on Machete
-	if (client->resp.curwepIndex == GR_WEPS - 1)
+	if (client->resp.curwepIndex == GR_WEP_MACHETE)
 	{
 		gr_Prints(ent, true, newWep);
 		client->pers.max_health = 200; //respawn values
@@ -382,11 +382,11 @@ void gr_CheckWepState(void)//add hypov8
 			continue;
 
 		//cant change wep anymore
-		if (ent->client->resp.curwepIndex == GR_WEPS - 1)
+		if (ent->client->resp.curwepIndex == GR_WEP_MACHETE)
 			continue;
 
 		//hypo look through all score/kill counters
-		for (j = GR_WEPS-1 ; j >=0 ; j--) // count backward, what if we killed 2 ppl
+		for (j = GR_WEP_MACHETE ; j >=0 ; j--) // count backward, what if we killed 2 ppl
 		{
 			if (ent->client->resp.score >= killcount[j] && ent->client->resp.curwepIndex == j)
 			{
@@ -446,7 +446,7 @@ void gr_RespawnSetWeps(gclient_t * client)
 			client->newweapon = &itemlist[ITEM_INDEX(item)]; //hypov8 add
 			client->pers.weapon = item;
 
-			if (client->resp.curwepIndex != GR_WEPS - 1) //only load ammo if not Machete
+			if (client->resp.curwepIndex != GR_WEP_MACHETE) //only load ammo if not Machete
 			{
 				client->ammo_index = ITEM_INDEX(FindItem(item->ammo));
 				client->pers.inventory[client->ammo_index] = grWeps[newWep].grAmmo;
@@ -458,7 +458,7 @@ void gr_RespawnSetWeps(gclient_t * client)
 		}
 	}
 
-	if (client->resp.curwepIndex == GR_WEPS-1) //hypov8 this can be a cheat. changeing from spec>respawn
+	if (client->resp.curwepIndex == GR_WEP_MACHETE) //hypov8 this can be a cheat. changeing from spec>respawn
 	{
 		client->pers.max_health = 200;
 		if (client->ps.pmove.pm_type != PM_SPECTATOR) //stop player going to spec and getting 200 hp
@@ -491,7 +491,7 @@ void gr_ResetPlayerBeginDM(gclient_t *client)
 		}
 	}
 
-	if (client->resp.curwepIndex == GR_WEPS - 1) //hypov8 this can be a cheat. changeing from spec>respawn
+	if (client->resp.curwepIndex == GR_WEP_MACHETE) //hypov8 this can be a cheat. changeing from spec>respawn
 	{
 		client->pers.max_health = 200;
 		if (client->ps.pmove.pm_type != PM_SPECTATOR) //stop player going to spec and getting 200 hp
@@ -507,7 +507,7 @@ void gr_SetKillsToNext(gclient_t *client)
 
 	//safe_bprintf(PRINT_HIGH, "%s has %i kills\n", client->pers.netname, client->resp.score); //hypov8 todo send to who??
 
-	if (client->resp.score >= killcount[GR_WEPS-1]){
+	if (client->resp.score >= killcount[GR_WEP_MACHETE]){
 		safe_bprintf(PRINT_HIGH, "Fraglimit hit.\n");
 		safe_bprintf(PRINT_HIGH, "%s WON THE GUNRACE!\n", client->pers.netname);
 		EndDMLevel();
@@ -588,7 +588,7 @@ void gr_setScoreboardGunrace(gclient_t *client)
 //check for machete. dont calculate bullets shots anymore
 qboolean gr_isLastWep(gclient_t * client)
 {
-	if (client->resp.score >= killcount[GR_WEPS - 2])
+	if (client->resp.score >= killcount[GR_WEP_LASTGUN])
 		return true;
 	return false;
 }

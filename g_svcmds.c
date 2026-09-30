@@ -125,9 +125,11 @@ qboolean SV_FilterPacket (char *from)
 	
 	in = *(unsigned *)m;
 
-	for (i=0 ; i<numipfilters ; i++)
-		if ( (in & ipfilters[i].mask) == ipfilters[i].compare)
-			return (int)filterban->value;
+	for (i = 0; i < numipfilters; i++)
+	{
+		if (( in & ipfilters[i].mask ) == ipfilters[i].compare)
+			return (int) filterban->value;
+	}
 
 	return (int)!filterban->value;
 }

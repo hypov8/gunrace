@@ -749,7 +749,7 @@ void ED_CallSpawn (edict_t *ent)
 			ent->classname = "misc_model"; //add hypov8 fix for map q3dm1_hellgate etc..
 		else
 		{
-			G_FreeEdict(ent); //hypov8 add
+			G_FreeEdict(ent); //item removed from map
 			return;
 		}
 	}
@@ -762,13 +762,14 @@ void ED_CallSpawn (edict_t *ent)
 		)
 		ent->classname = "pistol_mod_rof";
 
-	//stdm5
-	if (!Q_stricmp(level.mapname, "stdm5")) //add hypov8
+	//hax for map models
+	if (!strcmp(ent->classname, "item_pack"))
 	{
-		if (!strcmp(ent->classname, "worldspawn"))
-			st.sky = "space";
+		if (ent->model)
+			ent->classname = "misc_model"; //add hypov8 fix for map q3dm1_hellgate etc..
+		else
+			ent->classname = "pistol_mod_rof";
 	}
-
 	//GUNRACE_END
 
 	// Ridah: hack, KPDM1 has "item_flametank" which are now "ammo_flametank"
@@ -1203,15 +1204,10 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 				continue;
 			}
 
-			//dm_fis_b1
-			if (!Q_stricmp(level.mapname, "dm_fis_b1")) //add hypov8
-			{
-				if (!strcmp(ent->classname, "trigger_hurt"))
-					ent->dmg = 9999;
-			}
+// ACEBOT_ADD
 			//dm_mm
-			if (enable_bots && !Q_stricmp(level.mapname, "dm_mm")) //add hypov8
-			{
+			if (enable_bots && !Q_stricmp(level.mapname, "dm_mm")) 
+			{ //add hypov8
 				if (!strcmp(ent->classname, "func_door_secret")){
 					ent->classname = "func_door";
 					ent->s.angles[1] = 90.0f;
@@ -1220,8 +1216,11 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 					st.lip = 8;
 				}
 			}
+// ACEBOT_END
+//HYPOV8 ADD
 			//2v2dm_hypo
-			if (enable_bots && !Q_stricmp(level.mapname, "2v2dm_hypo")){ //add hypov8
+			if (!Q_stricmp(level.mapname, "2v2dm_hypo"))
+			{ //add hypov8
 				if (VectorCompare(ent->s.origin, spawnvecs_2v2hypo[0]))
 					ent->classname = "item_armor_legs_heavy";//heavy leg
 				else if (VectorCompare(ent->s.origin, spawnvecs_2v2hypo[1]))
@@ -1235,15 +1234,24 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 				else if (VectorCompare(ent->s.origin, spawnvecs_2v2hypo[5]))
 					ent->classname = "item_armor_helmet_heavy";//heavy head		
 			}
+			//dm_fis_b1
+			if (!Q_stricmp(level.mapname, "dm_fis_b1"))
+			{ //add hypov8
+				if (!strcmp(ent->classname, "trigger_hurt"))
+					ent->dmg = 9999;
+			}
 			//davs_room
-			if (!Q_stricmp(level.mapname, "davs_room")) //add hypov8
-				if (!strcmp(ent->classname, "func_timer")){
+			if (!Q_stricmp(level.mapname, "davs_room")) 
+			{	//add hypov8
+				if (!strcmp(ent->classname, "func_timer"))
 					ent->wait = 0.8;
-				}
+			}
 			//stdm5
-			if (!Q_stricmp(level.mapname, "stdm5")) //add hypov8
-			{
-				if (!strcmp(ent->classname, "misc_teleporter_dest")){
+			if (!Q_stricmp(level.mapname, "stdm5"))
+			{ //add hypov8
+				if (!strcmp(ent->classname, "worldspawn"))
+					st.sky = "space";
+				else if (!strcmp(ent->classname, "misc_teleporter_dest")){
 					ent->target = "";
 					ent->classname = "info_notnull";
 					ent->wait = 0;

@@ -645,7 +645,7 @@ qboolean Teamplay_ValidateJoinTeam( edict_t *self, int teamindex )
 	}
 */
 		if (self->client->resp.enterframe!=level.framenum)
-			PutClientInServer( self, false, 0 );	// find a new spawn point
+			PutClientInServer( self, false, 0 );	// find a new spawn point  // ACEBOT_ADD
 	}
 	return true;
 }

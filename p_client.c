@@ -61,11 +61,11 @@ void SP_info_player_coop(edict_t *self)
 The deathmatch intermission point will be at one of these
 Use 'angles' instead of 'angle', so you can set pitch or roll as well as yaw.  'pitch yaw roll'
 */
-void SP_info_player_intermission(void)
+void SP_info_player_intermission(edict_t *self)
 {
 }
 
-void SP_info_box_intermission(void)
+void SP_info_box_intermission(edict_t *self)
 {
 }
 
@@ -124,9 +124,9 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 			message = "suicides";
 			break;
 // ACEBOT_ADD
-			case MOD_BOT_SUICIDE: //added hypov8 console write bot death
-				message = "bot stuck, suicides";
-				break;
+		case MOD_BOT_SUICIDE: //added hypov8 console write bot death
+			message = "bot stuck, suicides";
+			break;
 // ACEBOT_END
 		case MOD_FALLING:
 			message = "cratered";
@@ -337,8 +337,8 @@ void ClientObituary (edict_t *self, edict_t *inflictor, edict_t *attacker)
 				message2 = "'s MP5";
 				break;
 			case MOD_AK47:
-				message = "was downed by";
-				message2 = "'s MP5";
+				message = "was utterly damaged by";
+				message2 = "'s AK47";
 				break;
 			//hypov8 todo add new weps
 //GUNRACE_END
@@ -668,7 +668,7 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 
 	if (damage >= 50 && self->health < -30 && !inflictor->client
 //GUNRACE_START
-	 || (inflictor->client && inflictor->client->resp.curwepIndex == GR_WEPS - 1)
+	 || (inflictor->client && inflictor->client->resp.curwepIndex == GR_WEP_MACHETE)
 //GUNRACE_END		
 		)
 	{	// gib
@@ -1238,7 +1238,7 @@ void respawn (edict_t *self)
 //		self->s.frame = self->client->anim_end;
 
 		CopyToBodyQue (self);
-		PutClientInServer (self, false, 0);
+		PutClientInServer (self, false, 0); // ACEBOT_ADD
 
 		// EV_OTHER_TELEPORT prevents lerping (unlike EV_PLAYER_TELEPORT)
 		self->s.event = EV_OTHER_TELEPORT;
@@ -1267,7 +1267,7 @@ Called when a player connects to a server or respawns in
 a deathmatch.
 ============
 */
-void PutClientInServer (edict_t *ent, qboolean isBot, int team)
+void PutClientInServer (edict_t *ent, qboolean isBot, int team) // ACEBOT_ADD
 {
 	vec3_t	mins = {-16, -16, -24};
 	vec3_t	maxs = {16, 16, 48};
@@ -1346,12 +1346,13 @@ void PutClientInServer (edict_t *ent, qboolean isBot, int team)
 
 // ACEBOT_ADD
 		if (enable_bots && anti_spawncamp->value)
+		{
 			if (!isBot)
 				client->invincible_framenum = level.framenum + 15;  //1.5 seconds 
 			else
 				client->invincible_framenum = level.framenum + 10;  //1.0 second (1.5 for players) 
+		}
 // ACEBOT_END
-
 	}
 	// RAFAEL
 	ent->viewheight = 40;
@@ -1725,7 +1726,7 @@ void ClientBeginDeathmatch (edict_t *ent)
 		}
 		
 		// locate ent at a spawn point
-		PutClientInServer (ent, false, 0);
+		PutClientInServer (ent, false, 0); // ACEBOT_ADD
 	}
 	else
 	{
@@ -2111,6 +2112,7 @@ void ClientUserinfoChanged (edict_t *ent, char *userinfo)
 		&& strncmp(s, "male_thug/", 10) 
 		&& strncmp(s, "male_runt/", 10)
 		&& strncmp(s, "male_kiss/", 10) //hypov8 todo
+		&& strncmp(s, "male_mario/", 11) //new
 		&& strncmp(s, "male_homer/", 11)
 		&& strncmp(s, "male_alien/", 11)
 		&& strncmp(s, "male_bones/", 11) //hypov8 todo
@@ -2273,7 +2275,8 @@ qboolean ClientConnect (edict_t *ent, char *userinfo)
 
 // ACEBOT_ADD
 	int		i,count = 0, botcount=0;
-	for_each_player(doot, i){
+	for_each_player(doot, i)
+	{
 		count++;
 		if (doot->acebot.is_bot && doot->inuse)
 			botcount++;
@@ -2283,14 +2286,17 @@ qboolean ClientConnect (edict_t *ent, char *userinfo)
 
 	ent->acebot.is_bot = false;
 // ACEBOT_END
-	//ent->client = NULL;
+	ent->client = NULL; //hypov8 check this
 	ent->inuse = false;
 	ent->flags = 0;
 
 	// check to see if they are on the banned IP list
 	value = Info_ValueForKey (userinfo, "ip");
 	if (!value[0])
+	{
+		gi.dprintf("WARNING: IP missing from userinfo\n"); //add debug
 		return false;
+	}
 	if (SV_FilterPacket(value))
 	{
 		if (kpded2)
@@ -2314,7 +2320,7 @@ qboolean ClientConnect (edict_t *ent, char *userinfo)
 	}
 
 	// they can connect
-	//ent->client = game.clients + (ent - g_edicts - 1); //hypov8 what!!!!!
+	ent->client = game.clients + (ent - g_edicts - 1); //hypov8 check?
 
 	// clear the respawning variables
 	InitClientResp (ent->client);
@@ -2354,7 +2360,7 @@ qboolean ClientConnect (edict_t *ent, char *userinfo)
 	else
 		gi.dprintf ("%s (%s) connected\n", ent->client->pers.netname, ent->client->pers.ip);
 		
-	for_each_player_not_bot(doot, j)
+	for_each_player_not_bot(doot, j) // ACEBOT_ADD
 	{
 		if ((doot->client->pers.admin == ADMIN) || doot->client->pers.rconx[0])
 		{
@@ -2552,6 +2558,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 
 	vec3_t	bike_premove_vel;
 
+
 	client = ent->client;
 
 	level.lastactive = level.framenum;
@@ -2724,6 +2731,47 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			client->ps.pmove.pm_type = PM_NORMAL;
 		}
 
+
+//GUNRACE
+#if 1
+		//speed up machet run speed a little
+	if (client->resp.curwepIndex == GR_WEP_MACHETE &&
+		ent->client && 
+		/* !ent->acebot.is_bot &&*/ 
+		ent->waterlevel == 0 && 
+		ent->groundentity && 
+		(fabs(ucmd->forwardmove) > 200 || fabs(ucmd->sidemove) >200)
+	)
+	{
+		float vLen;
+		vec3_t velo;
+		vec3_t  end, forward, right, up;
+		VectorClear (velo);
+
+		if (ucmd->forwardmove)
+		{
+			AngleVectors (ent->client->v_angle, forward, right, up);
+			VectorScale(forward, ucmd->forwardmove, end);
+			VectorAdd(end,velo,velo);
+		}
+
+		if (ucmd->sidemove)
+		{
+			AngleVectors (ent->client->v_angle, forward, right, up);
+			VectorScale(right, ucmd->sidemove, end);
+			VectorAdd(end,velo,velo);
+		}
+		velo[2] = 0;
+		vLen = VectorLength(velo);
+		if (vLen > 1)
+		{
+			VectorScale(velo, (25 / vLen) * (ucmd->msec*0.1), velo); //max to +25 velocity
+			VectorAdd(velo, ent->velocity, ent->velocity);
+		}
+	}
+#endif
+//END
+
 	}
 
 chasing:
@@ -2813,6 +2861,7 @@ chasing:
 	if (!ent->groundentity && pm.groundentity) // client landing
 		client->land_framenum = level.framenum;
 // END Snap
+
 
 #if !DEMO
 	// bikestuff
@@ -3110,8 +3159,15 @@ void ClientBeginServerFrame (edict_t *ent)
 	int			buttonMask;
 
 // ACEBOT_ADD //hypov8 todo:
-	if (ent->acebot.is_bot && !(level.modeset == MATCH || level.modeset == PUBLIC))
-		return; /* caught bots trying to respawn after match end */
+	if (ent->acebot.is_bot)
+	{
+		if (!( level.modeset == MATCH || level.modeset == PUBLIC ))
+			return; /* caught bots trying to respawn after match end */
+
+		/* hypov8 added so it dont check bots for idle issues(no nodes etc..) */
+		ent->client->pers.lastpacket = curtime;
+		ent->client->resp.check_idle = level.framenum;	
+	}
 // ACEBOT_END
 
 #if HYPODEBUG
@@ -3133,20 +3189,19 @@ void ClientBeginServerFrame (edict_t *ent)
 
 	if (level.intermissiontime)
 		return;
-#ifndef HYPODEBUG //hypov8 allow debug. pause will time player out //GUNRACE_ADD
+#ifdef HYPODEBUG //hypov8 allow debug. pause will time player out
+	client->pers.lastpacket = curtime;
+	client->resp.check_idle = level.framenum;
+#endif
+
 	if (client->pers.spectator != SPECTATING && curtime-client->pers.lastpacket >= 5000)
 	{
 		// 5 seconds since last contact from the client
 		safe_bprintf(PRINT_HIGH, "%s has lost contact with the server\n", client->pers.netname);
 		// make them a spectator
-// ACEBOT_ADD 
-		if (!ent->acebot.is_bot) /* hypov8 added so it dont check bots for idle issues(no nodes etc..) */
-// ACEBOT_END
 		Cmd_Spec_f(ent);
 	}
-	else
-#endif
-	if (client->pers.spectator != SPECTATING && (level.modeset == MATCH || level.modeset == PUBLIC))
+	else if (client->pers.spectator != SPECTATING && (level.modeset == MATCH || level.modeset == PUBLIC))
 	{
 		if ((level.framenum - client->resp.check_idle) > (idle_client->value * 10))
 		{

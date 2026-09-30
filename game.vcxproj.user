@@ -8,7 +8,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug Ser|Win32'">
     <LocalDebuggerCommand>$(OutDir)..\kpded2_.exe</LocalDebuggerCommand>
-    <LocalDebuggerCommandArguments>+set port 31590 +set dedicated 1 +game gunrace +exec server.cfg +deathmatch 1 +set public 0 +map play</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>+set port 31510 +set dedicated 1 +game gunrace +exec server.cfg +deathmatch 1 +set public 0 +map play</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerWorkingDirectory>$(OutDir)..\</LocalDebuggerWorkingDirectory>
   </PropertyGroup>

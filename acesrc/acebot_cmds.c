@@ -116,7 +116,7 @@ void ACECM_BotDebug(qboolean changeState)
 		strcat(str, newstatusbar);
 		gi.configstring(CS_STATUSBAR, str);
 
-		for_each_player_not_bot(doot, i)
+		for_each_player_not_bot(doot, i) // ACEBOT_ADD
 		{
 			if (i == 1) //hypov8 only debug first player
 			{

@@ -455,7 +455,7 @@ static qboolean ACEND_PathMapIsFirstPlayer(edict_t *self)
 {
 	edict_t *dood;
 	int i;
-	for_each_player_not_bot(dood, i)
+	for_each_player_not_bot(dood, i) // ACEBOT_ADD
 	{
 		if (dood->inuse 
 			&& !dood->acebot.is_bot
@@ -1291,7 +1291,7 @@ void ACEND_DebugNodesLocal(void)
 	{
 		memset(count, INVALID, sizeof(count));
 		//only used first player
-		for_each_player_not_bot(firstPlayer, iPlyr)
+		for_each_player_not_bot(firstPlayer, iPlyr) // ACEBOT_ADD
 		{
 			//hypov8 show all close nodes
 			for (j = 0; j < numnodes; j++)	

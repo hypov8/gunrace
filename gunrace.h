@@ -4,6 +4,8 @@
 //////////////////////////////////////
 //max wep count
 #define	GR_WEPS	13 //match grWeps_t grWeps //hypo todo: is also in g_weapon.c
+#define	GR_WEP_LASTGUN GR_WEPS-2
+#define	GR_WEP_MACHETE GR_WEPS-1
 //hypov8 todo add new weps
 
 typedef struct grWeps_s

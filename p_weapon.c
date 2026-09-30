@@ -2514,7 +2514,7 @@ void Tommygun_Fire (edict_t *ent)
 			spreadV = 150;
 			kick = 4;
 			damage = 20;
-			fire_bullet(ent, start, forward, damage, kick, spreadH, spreadV, MOD_MP5);
+			fire_bullet(ent, start, forward, damage, kick, spreadH, spreadV, MOD_AK47); //hypov8 fixed
 			wpFlags = MZ_ROCKET; // MZ_SPISTOL;
 		}
 		else

@@ -432,7 +432,7 @@ void VoteMapScoreboardMessage (edict_t *ent)
 	}
 
 	memset (&count, 0, sizeof(count));
-	for_each_player_not_bot(player, i)
+	for_each_player_not_bot(player, i) // ACEBOT_ADD
 	{
 		count[player->client->mapvote]++;
 	}

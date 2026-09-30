@@ -1594,17 +1594,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			}
 			if ((item->flags & IT_AMMO) && item->tag != AMMO_ROCKETS)
 				item = FindItem("Rockets");
-		}
-		//GUNRACE_START
-		if (dm_realmode->value == 0) //G()^T no mods
-		{
-			if ((item->flags & IT_WEAPON) || item->pickup == Pickup_Pack ) //G()^T Deleted code: || item->pickup == Pickup_Pistol_Mods 
-			{
-				G_FreeEdict (ent);
-				return;
-			}
-		}
-		//GUNRACE_END		
+		}		
 		else
 		// Ridah, realmode only has pistol, tommy and shotgun
 		if (dm_realmode->value && item->classname)

@@ -97,7 +97,7 @@ for(INDEX=1;INDEX<=(int)maxclients->value;INDEX++)\
 #define PLAYING				0
 
 #define GR_VER 14  //GUNRACE_ADD //used for client pack ver
-#define	GAMEVERSION	"GunRace v1.4" // Based on Monkey Mod v2.0" //GUNRACE_ADD
+#define	GAMEVERSION	"GunRace v1.4b" // Based on Monkey Mod v2.0" //GUNRACE_ADD
 
 // protocol bytes that can be directly added to messages
 #define	svc_muzzleflash		1
@@ -474,12 +474,6 @@ typedef struct
 
 	int		lastactive;
 
-
-
-// ACEBOT_ADD
-	int		is_spawn_bot;
-// ACEBOT_END
-
 	// next map voting
 	int vote_set[9];        // stores votes for next map
 	int num_vote_set;
@@ -487,6 +481,10 @@ typedef struct
 	int vote_winner; //todo hypov8
 
 	char playerskins[MAX_CLIENTS][MAX_QPATH]; // player skin configstrings
+
+// ACEBOT_ADD
+	int		is_spawn_bot;
+// ACEBOT_END
 } level_locals_t;
 
 
@@ -1138,7 +1136,7 @@ void fire_rat (edict_t *self, vec3_t start, vec3_t forward, int damage);
 //
 void respawn (edict_t *ent);
 void BeginIntermission (edict_t *targ);
-void PutClientInServer (edict_t *ent, qboolean isBot ,int team);
+void PutClientInServer (edict_t *ent, qboolean isBot ,int team); // ACEBOT_ADD
 void InitClientPersistant (gclient_t *client);
 void InitClientResp (gclient_t *client);
 void InitBodyQue (void);
@@ -1230,7 +1228,7 @@ void FetchClientEntData(edict_t *ent);
 
 //
 // g_spawn.c
-char *dm_statusbar; //add hypov8
+extern char *dm_statusbar; //add hypov8
 
 // ACEBOT_END
 
@@ -1405,20 +1403,8 @@ typedef struct
 typedef struct
 {
 	int			enterframe;			// level.framenum the client entered the game
-	int			score;
-	#define WEAPBUFSIZE 2048
-//GUNRACE_START
-	//char		*curweap;//G()^T curweap
-	int			curwepIndex; // hypov8 get index number for menu's
-	//char		*nexweap;//G()^T curweap
-	int			killtonext;//G^()^T kills to next
-	int			countWepChange; //scoreboard color. make red with new wep
+	int			score; // frags, etc
 
-	int revenge_time;
-	char revenge_name[16];
-	edict_t *revenge_Client;
-//GUNRACE_END
-	// frags, etc
 	vec3_t		cmd_angles;			// angles sent over in the last command
 
 	// teamplay
@@ -1445,6 +1431,18 @@ typedef struct
 
 #define TEXTBUFSIZE 2048
 	char		textbuf[TEXTBUFSIZE];
+
+//GUNRACE_START
+	//char		*curweap;//G()^T curweap
+	int			curwepIndex; // hypov8 get index number for menu's
+	//char		*nexweap;//G()^T curweap
+	int			killtonext;//G^()^T kills to next
+	int			countWepChange; //scoreboard color. make red with new wep
+
+	int revenge_time;
+	char revenge_name[16];
+	edict_t *revenge_Client;
+//GUNRACE_END
 } client_respawn_t;
 
 // this structure is cleared on each PutClientInServer(),
